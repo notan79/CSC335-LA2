@@ -80,4 +80,9 @@ public class Playlist {
 		
 		return stringBuilder.toString();
 	}
+	
+	@Override
+	public int hashCode() {
+		return this.toString().hashCode();
+	}
 }
