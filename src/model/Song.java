@@ -30,6 +30,7 @@ public final class Song {
 	private Rating rating;
 	private Album album;
 	private boolean isFavorite = false;
+	private int plays = 0;
 
 	/*
 	 * 	Basic Song constructor
@@ -79,6 +80,11 @@ public final class Song {
 		// gets the artist of the song
 		return this.album.getArtist();
 	}
+	
+	public String getGenre() {
+		// gets the artist of the song
+		return this.album.getGenre();
+	}
 
 	public Rating getRating() {
 		// get the current rating of the song
@@ -96,6 +102,10 @@ public final class Song {
 		// checks if the song is a favorite, returns a boolean
 		return this.isFavorite;
 	}
+	
+	public int getPlays() {
+		return this.plays;
+	}
 
 	// Setters
 	public void setFavorite() {
@@ -109,6 +119,10 @@ public final class Song {
 			this.setFavorite();
 		}
 		this.rating = rate;
+	}
+	
+	public void play() {
+		++this.plays;
 	}
 
 	// Override methods
