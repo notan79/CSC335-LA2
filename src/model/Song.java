@@ -144,5 +144,9 @@ public final class Song {
 	public String toString() {
 		return this.title + " by " + this.getArtist();
 	}
-
+	
+	@Override
+	public int hashCode() {
+		return this.toString().hashCode();
+	}
 }

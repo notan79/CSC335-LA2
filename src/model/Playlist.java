@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /* Author(s): Cameron Liu and Nathan Crutchfield
  * 
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 public class Playlist {
 
 	private final String name;
+	private final boolean removable;
 	private ArrayList<Song> playlistSongs = new ArrayList<>();
 
 	/*
@@ -31,12 +33,21 @@ public class Playlist {
 	 */
 	public Playlist(String name) {
 		this.name = name;
+		this.removable = true;
+	}
+	public Playlist(String name, boolean isRemovable) {
+		this.name = name;
+		this.removable = isRemovable;
 	}
 
 	public void addSong(Song song) {
 		// adds a song to the playlist
 		Song tempSong = new Song(song);
 		playlistSongs.add(tempSong);
+	}
+	
+	public boolean isRemovable() {
+		return this.removable;
 	}
 
 	public void removeSong(Song song) {
@@ -48,11 +59,19 @@ public class Playlist {
 			}
 		}
 	}
+	
+	public void removeAll() {
+		this.playlistSongs = new ArrayList<>();
+	}
 
 	// getters
 	public String getName() {
 		// gets the name of the playlist
 		return this.name;
+	}
+	
+	public void shuffle() {
+		Collections.shuffle(this.playlistSongs);
 	}
 
 	public ArrayList<Song> getPlaylist() {
@@ -79,5 +98,10 @@ public class Playlist {
 		}
 		
 		return stringBuilder.toString();
+	}
+	
+	@Override
+	public int hashCode() {
+		return this.toString().hashCode();
 	}
 }
