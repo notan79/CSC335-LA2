@@ -40,10 +40,10 @@ public class LibraryModel extends StoreFront {
 	
 	public LibraryModel() {
 		super();
-		allPlaylists.add(new Playlist("Favorites"));
-		allPlaylists.add(new Playlist("Top Rated"));
-		allPlaylists.add(new Playlist("Recently Played"));
-		allPlaylists.add(new Playlist("Frequently Played"));
+		allPlaylists.add(new Playlist("Favorites", false));
+		allPlaylists.add(new Playlist("Top Rated", false));
+		allPlaylists.add(new Playlist("Recently Played", false));
+		allPlaylists.add(new Playlist("Frequently Played", false));
 	}
 	
 	public boolean playSong(Song s) {
@@ -52,7 +52,8 @@ public class LibraryModel extends StoreFront {
 			if(temp.equals(s)) {
 				temp.play();
 				flag = true;
-				updateRecentPlays(s);
+				this.updateRecentPlays(s);
+				this.updateFrequentPlays(s);
 			}
 		}
 		return flag;
@@ -87,27 +88,25 @@ public class LibraryModel extends StoreFront {
 				p = t;
 		}
 		
-		HashMap<String, Integer> counter = new HashMap<>();
-		for(Song t : this.songList) {
-			if (counter.containsKey(t.getTitle())) {
-				counter.replace(t.getTitle(), t.getPlays());
-			} else {
-				counter.put(t.getTitle(), t.getPlays());
-			}
-		}
-		HashMap<Integer, String> reverse = new HashMap<>();
-		for(String t : counter.keySet()) {
-			reverse.put(counter.get(t), t);
-		}
+		// Never can happen
+		if(p == null)
+			return;
 		
-		ArrayList<Integer> temp = new ArrayList<>(reverse.keySet());
+		p.removeAll();
+		
+		HashMap<Integer, Song> counter = new HashMap<>();
+		for(Song t : this.songList) {
+      counter.put(t.getPlays(), t);
+    }
+		
+		ArrayList<Integer> temp = new ArrayList<>(counter.keySet());
 		Collections.sort(temp, Collections.reverseOrder());
 		int i = 0;
 		while(i < temp.size() && i < 10) {
-			
+			// Add the songs associated with the 10 most plays
+			p.addSong(counter.get(temp.get(i)));
 			++i;
 		}
-		
 	}
 	
 	// Methods to alter the songs in the library.
@@ -162,9 +161,9 @@ public class LibraryModel extends StoreFront {
 		
 		// Need to update the playlist
 		if(count >= 10) {
-			// Currently no playlist of this genre, create and add
-			if(genre == null) {
-				genre = new Playlist(g);		
+			// Currently no playlist (or user made playlist) of this genre, create and add
+			if(genre == null || genre.isRemovable()) {
+				genre = new Playlist(g, false);		
 				this.allPlaylists.add(genre);
 			}
 			
@@ -291,7 +290,7 @@ public class LibraryModel extends StoreFront {
 				tempPlaylist = allPlaylists.get(j);
 			}
 		}
-		if (tempPlaylist == null) {
+		if (tempPlaylist == null || !tempPlaylist.isRemovable()) {
 			return false;
 		}
 		
@@ -316,7 +315,7 @@ public class LibraryModel extends StoreFront {
 				tempPlaylist = allPlaylists.get(j);
 			}
 		}
-		if (tempPlaylist == null) {
+		if (tempPlaylist == null || !tempPlaylist.isRemovable()) {
 			return false;
 		}
 		
@@ -328,6 +327,7 @@ public class LibraryModel extends StoreFront {
 		}	
 		return true;
 	}
+	
 
 	// Getter
 	public ArrayList<String> getFavorites() {

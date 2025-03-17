@@ -141,4 +141,9 @@ public class Album {
 
 		return sBuilder.toString();
 	}
+	
+	@Override
+	public int hashCode() {
+		return this.toString().hashCode();
+	}
 }

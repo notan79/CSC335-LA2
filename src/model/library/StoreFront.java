@@ -90,6 +90,15 @@ public class StoreFront {
 	public ArrayList<Song> findSongByArtist(String artist) {
 		return this.findSongsComparator(Song.fromAlbum(Album.fromArtist(artist)), new Compare.CompareSongByArtist());
 	}
+	
+	public ArrayList<Song> findSongByGenre(String genre) {
+		ArrayList<Song> temp = new ArrayList<>();
+		for(Song song : this.songList) {
+			if(song.getGenre().equals(genre))
+				temp.add(song);
+		}
+		return temp;
+	}
 
 	/*
 	 * 	These return a list of Albums using the Compare utility class

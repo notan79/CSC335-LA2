@@ -42,5 +42,5 @@ public class Compare {
 			return a0.getAlbumName().compareTo(a1.getAlbumName());
 		}
 	}
-
+	
 }
