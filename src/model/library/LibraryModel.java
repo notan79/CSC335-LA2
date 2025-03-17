@@ -96,8 +96,8 @@ public class LibraryModel extends StoreFront {
 		
 		HashMap<Integer, Song> counter = new HashMap<>();
 		for(Song t : this.songList) {
-      counter.put(t.getPlays(), t);
-    }
+			counter.put(t.getPlays(), t);
+		}
 		
 		ArrayList<Integer> temp = new ArrayList<>(counter.keySet());
 		Collections.sort(temp, Collections.reverseOrder());
