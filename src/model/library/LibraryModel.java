@@ -89,9 +89,9 @@ public class LibraryModel extends StoreFront {
 		
 		HashMap<String, Integer> counter = new HashMap<>();
 		for(Song t : this.songList) {
-			if(counter.containsKey(t.getTitle())) {
+			if (counter.containsKey(t.getTitle())) {
 				counter.replace(t.getTitle(), t.getPlays());
-			}else {
+			} else {
 				counter.put(t.getTitle(), t.getPlays());
 			}
 		}
