@@ -21,8 +21,8 @@ class LibraryModelTest {
 	void testAddSong() {
 		lm.addSong(s0);
 		lm.addSong(s1);
-		assertEquals(lm.getSongList().get(0), s0);
-		assertEquals(lm.getSongList().get(1), s1);
+		assertEquals(lm.getSongList().toArray()[0], s0);
+		assertEquals(lm.getSongList().toArray()[1], s1);
 	}
 	
 
@@ -30,13 +30,14 @@ class LibraryModelTest {
 	void testCreatePlaylist() {
 		assertTrue(lm.createPlaylist("New Playlist"));
 		assertTrue(lm.createPlaylist("New Playlist 2"));
-		assertEquals(lm.getPlaylists().get(0), "New Playlist");
-		assertEquals(lm.getPlaylists().get(1), "New Playlist 2");
+		System.out.println(lm.getPlaylists());
+		assertEquals(lm.getPlaylists().get(2), "New Playlist");
+		assertEquals(lm.getPlaylists().get(3), "New Playlist 2");
 		
 		assertFalse(lm.createPlaylist("New Playlist"));
-		assertEquals(lm.getPlaylists().size(), 2);
-		assertEquals(lm.getPlaylists().get(0), "New Playlist");
-		assertEquals(lm.getPlaylists().get(1), "New Playlist 2");
+		assertEquals(lm.getPlaylists().size(), 6);
+		assertEquals(lm.getPlaylists().get(2), "New Playlist");
+		assertEquals(lm.getPlaylists().get(3), "New Playlist 2");
 	}
 	
 	@Test
@@ -100,8 +101,8 @@ class LibraryModelTest {
 		lm.addSong(s0);
 		lm.addSong(s1);
 		assertEquals(lm.getTitles().size(), 2);
-		assertEquals(lm.getTitles().get(0), s0.getTitle());
-		assertEquals(lm.getTitles().get(1), s1.getTitle());
+		assertEquals(lm.getTitles().toArray()[0], s0.getTitle());
+		assertEquals(lm.getTitles().toArray()[1], s1.getTitle());
 	}
 	
 	@Test 
@@ -110,7 +111,7 @@ class LibraryModelTest {
 		lm.addSong(s0);
 		lm.addSong(s1);
 		assertEquals(lm.getArtists().size(), 1);
-		assertEquals(lm.getArtists().get(0), s0.getAlbum().getArtist());
+		assertEquals(lm.getArtists().toArray()[0], s0.getAlbum().getArtist());
 	}
 	
 	@Test 
@@ -119,7 +120,7 @@ class LibraryModelTest {
 		lm.addSong(s0);
 		lm.addSong(s1);
 		assertEquals(lm.getAlbums().size(), 1);
-		assertEquals(lm.getAlbums().get(0), s0.getAlbum().getAlbumName());
+		assertEquals(lm.getAlbums().toArray()[0], s0.getAlbum().getAlbumName());
 	}
 	
 	@Test 
@@ -129,11 +130,11 @@ class LibraryModelTest {
 		lm.addSong(s2);
 		
 		assertEquals(lm.findSongByTitle(s0.getTitle()).size(), 1);
-		assertEquals(lm.findSongByTitle(s0.getTitle()).get(0), s0);
+		assertEquals(lm.findSongByTitle(s0.getTitle()).toArray()[0], s0);
 		
 		assertEquals(lm.findSongByTitle(s1.getTitle()).size(), 2);
-		assertEquals(lm.findSongByTitle(s1.getTitle()).get(0), s1);
-		assertEquals(lm.findSongByTitle(s1.getTitle()).get(1), s2);
+		assertEquals(lm.findSongByTitle(s1.getTitle()).toArray()[0], s1);
+		assertEquals(lm.findSongByTitle(s1.getTitle()).toArray()[1], s2);
 	}
 	
 	@Test 
@@ -143,11 +144,11 @@ class LibraryModelTest {
 		lm.addSong(s2);
 		
 		assertEquals(lm.findSongByArtist(s2.getArtist()).size(), 1);
-		assertEquals(lm.findSongByArtist(s2.getArtist()).get(0), s2);
+		assertEquals(lm.findSongByArtist(s2.getArtist()).toArray()[0], s2);
 		
 		assertEquals(lm.findSongByArtist(s0.getArtist()).size(), 2);
-		assertEquals(lm.findSongByArtist(s1.getArtist()).get(0), s0);
-		assertEquals(lm.findSongByArtist(s1.getArtist()).get(1), s1);
+		assertEquals(lm.findSongByArtist(s1.getArtist()).toArray()[0], s0);
+		assertEquals(lm.findSongByArtist(s1.getArtist()).toArray()[1], s1);
 	}
 	
 	@Test 
@@ -157,10 +158,10 @@ class LibraryModelTest {
 		lm.addSong(s2);
 		
 		assertEquals(lm.findAlbumByTitle(s2.getAlbum().getAlbumName()).size(), 1);
-		assertEquals(lm.findAlbumByTitle(s2.getAlbum().getAlbumName()).get(0), s2.getAlbum());
+		assertEquals(lm.findAlbumByTitle(s2.getAlbum().getAlbumName()).toArray()[0], s2.getAlbum());
 		
 		assertEquals(lm.findAlbumByTitle(s1.getAlbum().getAlbumName()).size(), 1);
-		assertEquals(lm.findAlbumByTitle(s1.getAlbum().getAlbumName()).get(0), s1.getAlbum());
+		assertEquals(lm.findAlbumByTitle(s1.getAlbum().getAlbumName()).toArray()[0], s1.getAlbum());
 	}
 	
 	@Test 
@@ -170,10 +171,10 @@ class LibraryModelTest {
 		lm.addSong(s2);
 		
 		assertEquals(lm.findAlbumByArtist(s2.getAlbum().getArtist()).size(), 1);
-		assertEquals(lm.findAlbumByArtist(s2.getAlbum().getArtist()).get(0), s2.getAlbum());
+		assertEquals(lm.findAlbumByArtist(s2.getAlbum().getArtist()).toArray()[0], s2.getAlbum());
 		
 		assertEquals(lm.findAlbumByArtist(s1.getAlbum().getArtist()).size(), 1);
-		assertEquals(lm.findAlbumByArtist(s1.getAlbum().getArtist()).get(0), s1.getAlbum());
+		assertEquals(lm.findAlbumByArtist(s1.getAlbum().getArtist()).toArray()[0], s1.getAlbum());
 	}
 	
 	@Test 
@@ -183,7 +184,8 @@ class LibraryModelTest {
 		lm.createPlaylist("Playlist");
 		lm.addSongToPlaylist("Playlist", s0.getTitle(), s0.getAlbum().getArtist());
 		lm.addSongToPlaylist("Playlist", s1.getTitle(), s1.getAlbum().getArtist());
-		assertEquals(lm.getPlaylistsFormatted().toString(), "[Playlist\n  -Title by Artist0\n  -Title2 by Artist0]");	
+		System.out.println(lm.getPlaylistsFormatted());
+		assertEquals(lm.getPlaylistsFormatted().toString(), "[Favorites, Frequently Played, Playlist\n  -Title by Artist0\n  -Title2 by Artist0, Recently Played, Top Rated]");	
 	}
 
 }
