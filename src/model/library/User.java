@@ -21,6 +21,7 @@ import java.lang.StringBuilder;
 
 
 public class User extends LibraryModel {
+	// Some comment
 	private final String username; 
 	private final String password;
 	private final static int saltLength = 64;
