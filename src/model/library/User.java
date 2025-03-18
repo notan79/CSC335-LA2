@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -39,7 +40,8 @@ public class User extends LibraryModel {
 		
 		MusicStore ms = new MusicStore("albums/albums.txt");
 		User u = new User("user", "pass");
-		Album a = ms.findAlbumByTitle("21").get(0);
+		
+		Album a = (Album) ms.findAlbumByTitle("21").toArray()[0];
 		u.addAlbum(a);
 		u.setFavorite(a.getSongs().get(0));
 		u.setRating(a.getSongs().get(1), Rating.FOUR);
@@ -50,7 +52,7 @@ public class User extends LibraryModel {
 		User u0 = u;
 		
 		u = new User("user2", "pass2");
-		a = ms.findAlbumByTitle("19").get(0);
+		a = (Album) ms.findAlbumByTitle("19").toArray()[0];
 		u.addAlbum(a);
 		u.setFavorite(a.getSongs().get(0));
 		u.setFavorite(a.getSongs().get(1));
@@ -126,6 +128,8 @@ public class User extends LibraryModel {
 			while (scan.hasNext()) {		
 				String[] lines = scan.nextLine().split(" ");
 				// assumes that there is none of the same username
+				for(String s : lines)
+					System.out.println(s);
 				if (lines[0].equals(username)) {
 					return lines[1];
 				}
@@ -270,7 +274,7 @@ public class User extends LibraryModel {
 							break;
 					}
 					
-					ArrayList<Song> possSongs = ms.findSongByTitle(songName);
+					HashSet<Song> possSongs = ms.findSongByTitle(songName);
 					for(Song song : possSongs) {
 						if(song.getArtist().equals(artistName)) {
 							tempUser.addSong(song);
@@ -300,7 +304,7 @@ public class User extends LibraryModel {
 							String songName = temp[0].strip();
 							
 							String artistName = temp[1].strip();
-							ArrayList<Song> possSongs = tempUser.findSongByTitle(songName);
+							HashSet<Song> possSongs = tempUser.findSongByTitle(songName);
 							for(Song song : possSongs) {
 								if(song.getArtist().equals(artistName))
 									if(playlistName.equals("Favorites")) 
@@ -353,6 +357,7 @@ public class User extends LibraryModel {
 		return this.toString().hashCode();
 	}
 	
+	@Override	
 	public boolean equals(Object o) {
 		if(o == null) return false;
 		

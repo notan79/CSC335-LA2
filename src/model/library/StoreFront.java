@@ -1,5 +1,6 @@
 package model.library;
 
+import java.util.HashSet;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -16,20 +17,20 @@ import model.Song;
  * 	Purpose: 	Parent class for MusicStore and LibraryModel
  * 
  * 	Instance Variables: 
- * 			- songList: protected ArrayList of Songs for the Songs in the instance
+ * 			- songList: protected HashSet of Songs for the Songs in the instance
  * 
  * 	Methods: 
  * 			- public void addSong(Song)
- * 			- public ArrayList<Song> getSongList()
- * 			- public ArrayList<String> getTitles()
- * 			- public ArrayList<String> getArtists()
- * 			- public ArrayList<String> getAlbums()
- * 			- public ArrayList<Song> findSongByTitle(String)
- * 			- public ArrayList<Song> findSongByArtist(String)
- * 			- public ArrayList<Album> findAlbumByTitle(String)
- * 			- public ArrayList<Album> findAlbumByArtist(String)
- * 			- private ArrayList<Song> findSongsComparator(Song, Comparator<Song>)
- * 			- private ArrayList<Album> findAlbumsComparator(Album, Comparator<Album>)
+ * 			- public HashSet<Song> getSongList()
+ * 			- public HashSet<String> getTitles()
+ * 			- public HashSet<String> getArtists()
+ * 			- public HashSet<String> getAlbums()
+ * 			- public HashSet<Song> findSongByTitle(String)
+ * 			- public HashSet<Song> findSongByArtist(String)
+ * 			- public HashSet<Album> findAlbumByTitle(String)
+ * 			- public HashSet<Album> findAlbumByArtist(String)
+ * 			- private HashSet<Song> findSongsComparator(Song, Comparator<Song>)
+ * 			- private HashSet<Album> findAlbumsComparator(Album, Comparator<Album>)
  * 	
  */
 public class StoreFront {
@@ -43,8 +44,8 @@ public class StoreFront {
 	}
 
 	// Returns a deep copy of songList
-	public ArrayList<Song> getSongList() {
-		ArrayList<Song> temp = new ArrayList<>();
+	public HashSet<Song> getSongList() {
+		HashSet<Song> temp = new HashSet<>();
 		for (Song song : this.songList) {
 			temp.add(new Song(song));
 		}
@@ -52,8 +53,8 @@ public class StoreFront {
 	}
 
 	// Returns a list of the song titles of songList
-	public ArrayList<String> getTitles() {
-		ArrayList<String> temp = new ArrayList<>();
+	public HashSet<String> getTitles() {
+		HashSet<String> temp = new HashSet<>();
 		for (Song song : this.songList) {
 			temp.add(song.getTitle());
 		}
@@ -61,21 +62,21 @@ public class StoreFront {
 	}
 
 	// Returns a list of the artists of songList
-	public ArrayList<String> getArtists() {
+	public HashSet<String> getArtists() {
 		HashSet<String> temp = new HashSet<>();
 		for (Song song : this.songList) {
 			temp.add(song.getArtist());
 		}
-		return new ArrayList<>(temp);
+		return new HashSet<>(temp);
 	}
 
 	// Returns a list of the albums of songList
-	public ArrayList<String> getAlbums() {
+	public HashSet<String> getAlbums() {
 		HashSet<String> temp = new HashSet<>();
 		for (Song song : this.songList) {
 			temp.add(song.getAlbum().getAlbumName());
 		}
-		return new ArrayList<>(temp);
+		return new HashSet<>(temp);
 	}
 	
 	/*
@@ -83,16 +84,16 @@ public class StoreFront {
 	 * 
 	 * 	Utilizes a temporary static "constructor" to get a new song with the given title or artist
 	 */
-	public ArrayList<Song> findSongByTitle(String title) {
+	public HashSet<Song> findSongByTitle(String title) {
 		return this.findSongsComparator(Song.fromTitle(title), new Compare.CompareSongByTitle());
 	}
 
-	public ArrayList<Song> findSongByArtist(String artist) {
+	public HashSet<Song> findSongByArtist(String artist) {
 		return this.findSongsComparator(Song.fromAlbum(Album.fromArtist(artist)), new Compare.CompareSongByArtist());
 	}
 	
-	public ArrayList<Song> findSongByGenre(String genre) {
-		ArrayList<Song> temp = new ArrayList<>();
+	public HashSet<Song> findSongByGenre(String genre) {
+		HashSet<Song> temp = new HashSet<>();
 		for(Song song : this.songList) {
 			if(song.getGenre().equals(genre))
 				temp.add(song);
@@ -105,17 +106,17 @@ public class StoreFront {
 	 * 
 	 * 	Utilizes a temporary static "constructor" to get a new album with the given title or artist
 	 */
-	public ArrayList<Album> findAlbumByTitle(String title) {
+	public HashSet<Album> findAlbumByTitle(String title) {
 		return this.findAlbumsComparator(Album.fromAlbumName(title), new Compare.CompareAlbumByTitle());
 	}
 
-	public ArrayList<Album> findAlbumByArtist(String artist) {
+	public HashSet<Album> findAlbumByArtist(String artist) {
 		return this.findAlbumsComparator(Album.fromArtist(artist), new Compare.CompareAlbumByArtist());
 	}
 
-	// Helper methods that return an ArrayList of Songs or albums given the input and the comparator
-	private ArrayList<Song> findSongsComparator(Song inp, Comparator<Song> c) {
-		ArrayList<Song> temp = new ArrayList<>();
+	// Helper methods that return an HashSet of Songs or albums given the input and the comparator
+	private HashSet<Song> findSongsComparator(Song inp, Comparator<Song> c) {
+		HashSet<Song> temp = new HashSet<>();
 		for (Song song : songList) {
 			if (c.compare(song, inp) == 0)
 				temp.add(new Song(song));
@@ -123,8 +124,8 @@ public class StoreFront {
 		return temp;
 	}
 
-	private ArrayList<Album> findAlbumsComparator(Album inp, Comparator<Album> c) {
-		ArrayList<Album> temp = new ArrayList<>();
+	private HashSet<Album> findAlbumsComparator(Album inp, Comparator<Album> c) {
+		HashSet<Album> temp = new HashSet<>();
 		for (Song song : songList) {
 			if (c.compare(song.getAlbum(), inp) == 0 && !temp.contains(song.getAlbum()))
 				temp.add(new Album(song.getAlbum()));
