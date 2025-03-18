@@ -18,8 +18,6 @@ import model.Song;
 
 import java.lang.StringBuilder;
 
-
-
 public class User extends LibraryModel {
 	// Some comment
 	private final String username; 
@@ -114,8 +112,12 @@ public class User extends LibraryModel {
 	public boolean validateLogin(String username, String password) {
 		// checks if the user has the same user and pass
 		String temp = usernameExist(username);
-		temp = temp.substring(0, temp.length() - User.saltLength);
-		return temp != null && temp.equals(encrypt(password));
+		if (temp == null) {
+			return false;
+		} else {
+			temp = temp.substring(0, temp.length() - User.saltLength);
+		}
+		return temp.equals(encrypt(password));
 	}
 	
 	private String usernameExist(String username) {

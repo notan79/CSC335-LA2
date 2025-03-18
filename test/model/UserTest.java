@@ -15,12 +15,14 @@ import model.library.User;
 class UserTest {
 	private User user = new User("username", "password");
 	private User user2 = new User("user2", "thisismypassword!");
+	private	User user3 = new User("", "password");
 
 	
 	@Test
 	void testValidateLogin() {
-		assertEquals(user.validateLogin("uname", "password"), true);
+		assertEquals(user.validateLogin("username", "password"), true);
 		assertEquals(user2.validateLogin("user2", "thisisnotmypassword"), false);
+		assertFalse(user3.validateLogin("a", "password"));
 	}
 	
 	@Test
