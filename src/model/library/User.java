@@ -84,7 +84,7 @@ public class User extends LibraryModel {
 	}
 	
 	// 0 to 93, add the int value of 'a' 64 times
-	private String salt(String password) {
+	private static String salt(String password) {
 		Random random = new Random();
 		StringBuilder sb = new StringBuilder(password);
 		for (int i = 0; i < User.saltLength; i++) {
@@ -94,7 +94,7 @@ public class User extends LibraryModel {
 		return sb.toString();
 	}
 	
-	private String encrypt(String password) {
+	private static String encrypt(String password) {
 		String temp = "";
 		try {
 			MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -113,7 +113,7 @@ public class User extends LibraryModel {
 	}
 
 	
-	public boolean validateLogin(String username, String password) {
+	public static boolean validateLogin(String username, String password) {
 		// checks if the user has the same user and pass
 		String temp = usernameExist(username);
 		if (temp == null) {
@@ -124,7 +124,7 @@ public class User extends LibraryModel {
 		return temp != null && temp.equals(encrypt(password));
 	}
 	
-	private String usernameExist(String username) {
+	public static String usernameExist(String username) {
 		// returns the encrypted and salted pass associated with user
 		File file = new File("data/login");
 		try {
@@ -132,8 +132,6 @@ public class User extends LibraryModel {
 			while (scan.hasNext()) {		
 				String[] lines = scan.nextLine().split(" ");
 				// assumes that there is none of the same username
-				for(String s : lines)
-					System.out.println(s);
 				if (lines[0].equals(username)) {
 					return lines[1];
 				}
