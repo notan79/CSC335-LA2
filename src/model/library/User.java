@@ -15,16 +15,6 @@ import java.io.FileNotFoundException;
 
 public class User extends LibraryModel {
 	
-//	public static void main(String[] args) {
-//	
-//		User user = new User("uname", "password");
-//		User user2 = new User("u2", "pass");
-//		
-//		System.out.println(user.validateLogin("uname", "password"));
-//		System.out.println(user2.validateLogin("u2", "password"));
-//	}
-	
-	
 	private final String username; 
 	private final String password;
 	private final static int saltLength = 64;
@@ -72,12 +62,10 @@ public class User extends LibraryModel {
 			// This can never happen
 			System.exit(1);
 		}
-		
 		return temp;
 	}
 	
 	
-	// used for 
 	public boolean validateLogin(String username, String password) {
 		// checks if the user has the same user and pass
 		String temp = usernameExist(username);
@@ -105,6 +93,21 @@ public class User extends LibraryModel {
 		return null;
 		
 	}
+	
+	
+	// Getters 
+	
+	public String getUsername() {
+		return this.username;
+	}
+	
+	public String getPassword() { 
+		return this.password;
+	}
+	
+	
+	
+	
 	
 	
 	
