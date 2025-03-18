@@ -93,19 +93,21 @@ public class LibraryModel extends StoreFront {
 		
 		p.removeAll();
 		
-		HashMap<Integer, Song> counter = new HashMap<>();
+		HashMap<Song, Integer> counter = new HashMap<>();
 		for(Song t : this.songList) {
-			counter.put(t.getPlays(), t);
+			counter.put(t, t.getPlays());
 		}
 		
-		ArrayList<Integer> temp = new ArrayList<>(counter.keySet());
+		ArrayList<Integer> temp = new ArrayList<>(counter.values());
 		Collections.sort(temp, Collections.reverseOrder());
 		
-		// Skip the 0 key because no plays
-		int i = 1;
+		int i = 0;
 		while(i < temp.size() && i <= 10) {
 			// Add the songs associated with the 10 most plays
-			p.addSong(counter.get(temp.get(i)));
+			for(Song key : counter.keySet()) {
+				if(counter.get(key) == temp.get(i) && temp.get(i) != 0)
+					p.addSong(key);
+			}
 			++i;
 		}
 	}

@@ -111,12 +111,16 @@ public class User extends LibraryModel {
 		}
 		return temp;
 	}
-	
+
 	
 	public boolean validateLogin(String username, String password) {
 		// checks if the user has the same user and pass
 		String temp = usernameExist(username);
-		temp = temp.substring(0, temp.length() - User.saltLength);
+		if (temp == null) {
+			return false; 
+		} else {
+			temp = temp.substring(0, temp.length() - User.saltLength);
+		}
 		return temp != null && temp.equals(encrypt(password));
 	}
 	
@@ -183,6 +187,8 @@ public class User extends LibraryModel {
 			sb.append(s);
 			sb.append(" ");
 			sb.append(s.getRating());
+			sb.append(" ");
+			sb.append(s.getPlays());
 			sb.append(",");
 		}
 		sb.deleteCharAt(sb.length()-1); // remove additional ","
@@ -250,8 +256,10 @@ public class User extends LibraryModel {
 					String songName = temp[0].strip();
 					
 					temp = temp[1].strip().split(" ");
+
 					String artistName = temp[0].strip();
 					String strRating = temp[1].strip();
+					int plays = Integer.parseInt(temp[2].strip());
 					Rating rating;
 					switch(strRating) {
 						case "ONE": 
@@ -279,6 +287,10 @@ public class User extends LibraryModel {
 						if(song.getArtist().equals(artistName)) {
 							tempUser.addSong(song);
 							tempUser.setRating(song, rating);
+							// Play the song
+							for(int i = 0; i < plays; ++i) {
+								tempUser.playSong(song);
+							}
 						}
 					}
 				}
@@ -323,28 +335,28 @@ public class User extends LibraryModel {
 	
 	// Adds a song to a specified playlist when reading user data from file
 	private boolean forceAddSongToPlaylist(String playlistName, String title, String artist) {
-			ArrayList<Song> songs = this.songList;
-			Playlist tempPlaylist = null;
-			boolean flag = false;
-			
-			// gets the proper playlist
-			for (int j = 0; j < allPlaylists.size(); j++) {
-				if (allPlaylists.get(j).getName().equals(playlistName)) {
-					tempPlaylist = allPlaylists.get(j);
-				}
+		ArrayList<Song> songs = this.songList;
+		Playlist tempPlaylist = null;
+		boolean flag = false;
+		
+		// gets the proper playlist
+		for (int j = 0; j < allPlaylists.size(); j++) {
+			if (allPlaylists.get(j).getName().equals(playlistName)) {
+				tempPlaylist = allPlaylists.get(j);
 			}
-			if (tempPlaylist == null) {
-				return false;
+		}
+		if (tempPlaylist == null) {
+			return false;
+		}
+		
+		// adds the proper playlist
+		for (int i = 0; i < songs.size(); i++) {
+			if (songs.get(i).getTitle().equals(title) && songs.get(i).getArtist().equals(artist)) {
+				tempPlaylist.addSong(new Song(songs.get(i)));
+				flag = true;
 			}
-			
-			// adds the proper playlist
-			for (int i = 0; i < songs.size(); i++) {
-				if (songs.get(i).getTitle().equals(title) && songs.get(i).getArtist().equals(artist)) {
-					tempPlaylist.addSong(new Song(songs.get(i)));
-					flag = true;
-				}
-			}	
-			return flag;
+		}	
+		return flag;
 	}
 	
 	@Override
