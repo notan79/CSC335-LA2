@@ -35,7 +35,7 @@ import model.Song;
  */
 public class LibraryModel extends StoreFront {
 
-	private ArrayList<Playlist> allPlaylists = new ArrayList<Playlist>();
+	protected ArrayList<Playlist> allPlaylists = new ArrayList<Playlist>();
 	private HashSet<Album> allAlbums = new HashSet<>();
 	
 	public LibraryModel() {
@@ -80,7 +80,6 @@ public class LibraryModel extends StoreFront {
 	}
 	
 	
-	// Doesn't work, multiple songs of same title, and need access to the song... update hashValue in Song
 	private void updateFrequentPlays(Song s) {
 		Playlist p = null;
 		for(Playlist t : this.allPlaylists) {
@@ -101,8 +100,10 @@ public class LibraryModel extends StoreFront {
 		
 		ArrayList<Integer> temp = new ArrayList<>(counter.keySet());
 		Collections.sort(temp, Collections.reverseOrder());
-		int i = 0;
-		while(i < temp.size() && i < 10) {
+		
+		// Skip the 0 key because no plays
+		int i = 1;
+		while(i < temp.size() && i <= 10) {
 			// Add the songs associated with the 10 most plays
 			p.addSong(counter.get(temp.get(i)));
 			++i;
@@ -114,6 +115,7 @@ public class LibraryModel extends StoreFront {
 	public void addSong(Song song) {
 		super.addSong(song);
 		this.allAlbums.add(song.getAlbum());
+
 		this.genrePlaylist(song.getGenre());
 	}
 	
@@ -123,7 +125,7 @@ public class LibraryModel extends StoreFront {
 		
 		for(Song s : album.getSongs()) {
 			if(!this.songList.contains(s))
-				this.songList.add(s);
+				this.addSong(s);
 		}
 	}
 	
@@ -303,6 +305,7 @@ public class LibraryModel extends StoreFront {
 		}	
 		return flag;
 	}
+	
 
 	// Removes a song from a specified playlist
 	public boolean removeSongFromPlaylist(String playlistName, String title, String artist) {
