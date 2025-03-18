@@ -144,6 +144,14 @@ public class Album {
 	
 	@Override
 	public int hashCode() {
-		return this.toString().hashCode();
+		StringBuilder sBuilder = new StringBuilder();
+		sBuilder.append(this.albumName);
+		sBuilder.append(" by ");
+		sBuilder.append(this.artist);
+		sBuilder.append(". Genre: ");
+		sBuilder.append(this.genre);
+		sBuilder.append(". Year: ");
+		sBuilder.append(this.year.toString());
+		return sBuilder.toString().hashCode();
 	}
 }

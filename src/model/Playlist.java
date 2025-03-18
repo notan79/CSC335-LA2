@@ -24,7 +24,7 @@ import java.util.Collections;
 public class Playlist {
 
 	private final String name;
-	private final boolean removable;
+	private boolean removable;
 	private ArrayList<Song> playlistSongs = new ArrayList<>();
 
 	/*
@@ -48,6 +48,10 @@ public class Playlist {
 	
 	public boolean isRemovable() {
 		return this.removable;
+	}
+	
+	public void setRemovableFalse() {
+		this.removable = false;
 	}
 
 	public void removeSong(Song song) {
