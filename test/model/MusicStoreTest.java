@@ -3,6 +3,7 @@ package model;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import org.junit.jupiter.api.Test;
 
@@ -19,12 +20,11 @@ class MusicStoreTest {
 						"Mana", "Ozomatli", "Ben Harper", "Amos Lee",
 						"Leonard Cohen", "Mumford & Sons", "OneRepublic",
 						"Coldplay", "Dolly Parton", "Carol King", "The Heavy"};
-		ArrayList<String> arrayList = mStore.getArtists(); 
+		HashSet<String> hashSet = mStore.getArtists(); 
 		for(String string : arr) {
-			arrayList.indexOf(string);
-			assertNotEquals(arrayList.indexOf(string), -1);
+			assertTrue(hashSet.contains(string));
 		}
-		assertEquals(arrayList.size(), arr.length);
+		assertEquals(hashSet.size(), arr.length);
 
 		
 		String[] arr2 = {"19", "21", "Begin Again", "Boys & Girls", "Cuando Los Angeles Lloran",
@@ -32,12 +32,11 @@ class MusicStoreTest {
 				"Sigh No More", "Waking Up", "A Rush of Blood to the Head", "Coat of Many Colors",
 				"Tapestry", "Sons"};
 		
-		arrayList = mStore.getAlbums();
+		hashSet = mStore.getAlbums();
 		for(String string : arr2) {
-			arrayList.indexOf(string);
-			assertNotEquals(arrayList.indexOf(string), -1);
+			assertTrue(hashSet.contains(string));
 		}
-		assertEquals(arrayList.size(), arr2.length);
+		assertEquals(hashSet.size(), arr2.length);
 		
 		MusicStore ms = new MusicStore("albums/otherFile.txt");
 		assertEquals(ms.getSongList().size(), 0);
