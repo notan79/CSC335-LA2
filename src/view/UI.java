@@ -12,6 +12,7 @@ import model.library.MusicStore;
 import model.library.StoreFront;
 
 public class UI {
+	// Some comment
 	private static Scanner scanner;
 	private static MusicStore ms;
 	private static LibraryModel lib;
