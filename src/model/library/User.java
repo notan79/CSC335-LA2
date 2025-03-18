@@ -18,7 +18,7 @@ public class User extends LibraryModel {
 	private final String username; 
 	private final String password;
 	private final static int saltLength = 64;
-	
+
 	public User(String username, String password) {
 		this.username = username; 
 		this.password = salt(encrypt(password));
