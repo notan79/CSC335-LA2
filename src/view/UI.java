@@ -1,6 +1,7 @@
 package view;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Scanner;
 
 import model.Album;
@@ -69,52 +70,52 @@ public class UI {
 		if (inpString.equals("1")) {
 			System.out.print("Enter song title: ");
 			inpString = scanner.nextLine().strip();
-			ArrayList<Song> tempArrayList = s.findSongByTitle(inpString);
-			if (tempArrayList.size() > 0)
+			HashSet<Song> tempHashSet = s.findSongByTitle(inpString);
+			if (tempHashSet.size() > 0)
 				System.out.printf("\nFound these songs with title: %s\n", inpString);
 			else
 				System.out.printf("\nFound no songs with title: %s\n", inpString);
 
-			for (Song song : tempArrayList)
+			for (Song song : tempHashSet)
 				System.out.println("- " + song);
 		} 
 		// Find song by artist
 		else if (inpString.equals("2")) {
 			System.out.print("Enter artist: ");
 			inpString = scanner.nextLine().strip();
-			ArrayList<Song> tempArrayList = s.findSongByArtist(inpString);
-			if (tempArrayList.size() > 0)
+			HashSet<Song> tempHashSet = s.findSongByArtist(inpString);
+			if (tempHashSet.size() > 0)
 				System.out.printf("\nFound these songs with artist: %s\n", inpString);
 			else
 				System.out.printf("\nFound no songs with artist: %s\n", inpString);
 
-			for (Song song : tempArrayList)
+			for (Song song : tempHashSet)
 				System.out.println("- " + song);
 		} 
 		// Find songs by album 
 		else if (inpString.equals("3")) {
 			System.out.print("Enter album title: ");
 			inpString = scanner.nextLine().strip();
-			ArrayList<Album> tempArrayList = s.findAlbumByTitle(inpString);
-			if (tempArrayList.size() > 0)
+			HashSet<Album> tempHashSet = s.findAlbumByTitle(inpString);
+			if (tempHashSet.size() > 0)
 				System.out.printf("\nFound these albums with title: %s\n", inpString);
 			else
 				System.out.printf("\nFound no albums with title: %s\n", inpString);
 
-			for (Album album : tempArrayList)
+			for (Album album : tempHashSet)
 				System.out.println("- " + album);
 		} 
 		// Find Albums by artist
 		else if (inpString.equals("4")) {
 			System.out.print("Enter artist: ");
 			inpString = scanner.nextLine().strip();
-			ArrayList<Album> tempArrayList = s.findAlbumByArtist(inpString);
-			if (tempArrayList.size() > 0)
+			HashSet<Album> tempHashSet = s.findAlbumByArtist(inpString);
+			if (tempHashSet.size() > 0)
 				System.out.printf("\nFound these albums with artist: %s\n", inpString);
 			else
 				System.out.printf("\nFound no albums with artist: %s\n", inpString);
 
-			for (Album album : tempArrayList)
+			for (Album album : tempHashSet)
 				System.out.println("- " + album);
 		}
 
@@ -179,22 +180,22 @@ public class UI {
 		
 		// Get songs
 		if (inpString.equals("1")) {
-			ArrayList<Song> arrayList = lib.getSongList();
-			for (Song song : arrayList) {
+			HashSet<Song> hashSet = lib.getSongList();
+			for (Song song : hashSet) {
 				System.out.println("- " + song);
 			}
 		} 
 		// Get artists
 		else if (inpString.equals("2")) {
-			ArrayList<String> arrayList = lib.getArtists();
-			for (String s : arrayList) {
+			HashSet<String> hashSet = lib.getArtists();
+			for (String s : hashSet) {
 				System.out.println("- " + s);
 			}
 		} 
 		// Get albums
 		else if (inpString.equals("3")) {
-			ArrayList<String> arrayList = lib.getAlbums();
-			for (String s : arrayList) {
+			HashSet<String> hashSet = lib.getAlbums();
+			for (String s : hashSet) {
 				System.out.println("- " + s);
 			}
 		} 
@@ -227,7 +228,7 @@ public class UI {
 		if (inpString.equals("1")) {
 			System.out.print("\nEnter song title to add: ");
 			inpString = scanner.nextLine().strip();
-			ArrayList<Song> arr = ms.findSongByTitle(inpString);
+			HashSet<Song> arr = ms.findSongByTitle(inpString);
 			if (arr.size() == 0) {
 				System.out.printf("No songs in music store with title: %s\n", inpString);
 			} else {
@@ -243,7 +244,7 @@ public class UI {
 		else if (inpString.equals("2")) {
 			System.out.print("\nEnter album title to add: ");
 			inpString = scanner.nextLine().strip();
-			ArrayList<Album> arr = ms.findAlbumByTitle(inpString);
+			HashSet<Album> arr = ms.findAlbumByTitle(inpString);
 			if (arr.size() == 0) {
 				System.out.printf("No songs in music store with title: %s", inpString);
 			} else {
@@ -269,7 +270,7 @@ public class UI {
 		System.out.println("Valid ratings are 1-5. Anything else will be interpreted as no rating.");
 		System.out.print("\nEnter song title to rate: ");
 		inpString = scanner.nextLine().strip();
-		ArrayList<Song> arr = lib.findSongByTitle(inpString);
+		HashSet<Song> arr = lib.findSongByTitle(inpString);
 		
 		// No songs in the library with given name
 		if (arr.size() == 0) {
@@ -303,7 +304,7 @@ public class UI {
 		String inpString;
 		System.out.print("\nEnter song title to favorite: ");
 		inpString = scanner.nextLine().strip();
-		ArrayList<Song> arr = lib.findSongByTitle(inpString);
+		HashSet<Song> arr = lib.findSongByTitle(inpString);
 		
 		// No song with given name
 		if (arr.size() == 0) {
