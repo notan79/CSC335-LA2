@@ -4,20 +4,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 /* Author(s): Cameron Liu and Nathan Crutchfield
- * 
- * Purpose: The purpose of this class is to represent a playlist. It does this by having a name, and a 
- * playlist of songs that are created in order to show the playlist itself. 
- * 
- * Instance Variables: 
+ *
+ * Purpose: The purpose of this class is to represent a playlist. It does this by having a name, and a
+ * playlist of songs that are created in order to show the playlist itself.
+ *
+ * Instance Variables:
  * 	name: the name of the playlist
  * 	playlistSongs: the ArrayList of songs that represents a playlist.
- * 
+ *
  * Methods:
  * 	public void addSong(Song): adds a song to the ArrayList of songs (playlistSongs)
  * 	public void removeSong(Song): removes a song from the ArrayList of songs (playlistSongs)
  * 	public String getName(): returns the name of the ArrayList of songs (playlistSongs)
- * 	public ArrayList<Song> getPlaylist(): returns the ArrayList of songs (playlistSongs)  
- * 
+ * 	public ArrayList<Song> getPlaylist(): returns the ArrayList of songs (playlistSongs)
+ *
  */
 
 
@@ -45,11 +45,11 @@ public class Playlist {
 		Song tempSong = new Song(song);
 		playlistSongs.add(tempSong);
 	}
-	
+
 	public boolean isRemovable() {
 		return this.removable;
 	}
-	
+
 	public void setRemovableFalse() {
 		this.removable = false;
 	}
@@ -63,7 +63,7 @@ public class Playlist {
 			}
 		}
 	}
-	
+
 	public void removeAll() {
 		this.playlistSongs = new ArrayList<>();
 	}
@@ -73,14 +73,14 @@ public class Playlist {
 		// gets the name of the playlist
 		return this.name;
 	}
-	
+
 	public void shuffle() {
 		Collections.shuffle(this.playlistSongs);
 	}
 
 	public ArrayList<Song> getPlaylist() {
 		// gets the playlist
-		ArrayList<Song> tempPlaylist = new ArrayList<Song>();
+		ArrayList<Song> tempPlaylist = new ArrayList<>();
 		for (int i = 0; i < playlistSongs.size(); i++) {
 			// iterates through original playlist, creating copy of each song and adding it
 			// to a copy of new arraylist.
@@ -89,7 +89,7 @@ public class Playlist {
 		}
 		return tempPlaylist;
 	}
-	
+
 	// Override Method
 	@Override
 	public String toString() {
@@ -100,10 +100,10 @@ public class Playlist {
 			stringBuilder.append(song);
 			// stringBuilder.append("\n");
 		}
-		
+
 		return stringBuilder.toString();
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return this.toString().hashCode();

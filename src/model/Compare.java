@@ -24,6 +24,15 @@ public class Compare {
 			return s0.getTitle().compareTo(s1.getTitle());
 		}
 	}
+	
+	// Compare the Songs by their rating (highest rating at start, lowest at end)
+	public static class CompareSongByRating implements Comparator<Song> {
+
+		@Override
+		public int compare(Song s0, Song s1) {
+			return s1.getRating().valueOf() - s0.getRating().valueOf();
+		}
+	}
 
 	// Compare the Albums by their artist
 	public static class CompareAlbumByArtist implements Comparator<Album> {
@@ -42,5 +51,5 @@ public class Compare {
 			return a0.getAlbumName().compareTo(a1.getAlbumName());
 		}
 	}
-	
+
 }
