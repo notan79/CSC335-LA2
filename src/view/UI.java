@@ -88,7 +88,6 @@ public class UI {
 	private static void createUser() {
 		System.out.print("Enter a username: ");
 		String userName = scanner.nextLine().strip();
-		String temp = User.usernameExist(userName);
 		if(User.usernameExist(userName) == null) {
 			System.out.print("Enter a password: ");
 			String pw = scanner.nextLine().strip();
@@ -121,7 +120,7 @@ public class UI {
 	}
 
 	/*
-	 * 	Allows for any StoreFront object (music store and user library) to
+	 * 	Allows for any StoreFront object (music store and user) to
 	 * 	search for artists, songs, albums from its songList.
 	 */
 	private static void searchPrompt(StoreFront s) {
@@ -154,7 +153,7 @@ public class UI {
 				
 				String str = "";
 				if(s.getClass() != MusicStore.class) {
-					System.out.print("Get album information (Y for yes): ");
+					System.out.print("Get album information (Enter Y for yes): ");
 					str = scanner.nextLine().strip();
 				}
 
@@ -255,7 +254,7 @@ public class UI {
 	 */
 	private static void libraryPrompt() {
 		System.out.printf("\nYou are in user library. Choose an action (1-8):\n" + "1. Search for songs or albums.\n"
-				+ "2. Add song or album to library.\n" + "3. Rate a song.\n" + "4. Favorite a song.\n"
+				+ "2. Add/remove song or album, or shuffle songs in library.\n" + "3. Rate a song.\n" + "4. Favorite a song.\n"
 				+ "5. Get information for library.\n" + "6. Create playlist.\n"
 				+ "7. Add or remove song from playlist or shuffle playlist.\n" + "8. Exit User Library.\n\n" + "Enter action: ");
 
@@ -263,7 +262,7 @@ public class UI {
 		if (inpString.equals("1")) {
 			searchPrompt(curUser);
 		} else if (inpString.equals("2")) {
-			addToLibrary();
+			addRemoveShuffleLibrary();
 		} else if (inpString.equals("3")) {
 			rateSongInLibrary();
 		} else if (inpString.equals("4")) {
@@ -303,8 +302,8 @@ public class UI {
 		// Get songs
 		if (inpString.equals("1")) {
 			HashSet<Song> hashSet = curUser.getSongList();
-			System.out.printf("\nChoose an action (1-5):\n" + "1. Sorted by title.\n"
-					+ "2. Sorted by artist.\n" + "3. Sorted by rating." 
+			System.out.printf("\nChoose an action (1-5):\n" + "1. Sort by title.\n"
+					+ "2. Sort by artist.\n" + "3. Sort by rating." 
 					+ "4. Not sorted.\n\n");
 			
 			sorted = runScannerOptions(4);
@@ -348,6 +347,61 @@ public class UI {
 			ArrayList<String> arrayList = curUser.getFavorites();
 			for (String s : arrayList) {
 				System.out.println("- " + s);
+			}
+		}
+	}
+	
+	private static void addRemoveShuffleLibrary() {
+		String inpString;
+		System.out.printf("\nChoose an action (1-3):\n"
+				+ "1. Add song or album.\n" + "2. Remove song or album.\n" + "3. Shuffle library.\n" + "Enter action: ");
+		inpString = runScannerOptions(3);
+		if(inpString.equals("1"))
+			addToLibrary();
+		else if(inpString.equals("2")) {
+			removeFromLibrary();
+		}else {
+			curUser.shuffleLibrary(); 
+			System.out.println("Shuffled library.");
+		}
+	}
+	
+	private static void removeFromLibrary() {
+		String inpString;
+		System.out.printf("\nChoose an action (1-2):\n"
+				+ "1. Remove song.\n" + "2. Remove album.\n" + "Enter action: ");
+		inpString = runScannerOptions(2);
+		
+		if(inpString.equals("1")) {
+			System.out.print("\nEnter song title to remove: ");
+			inpString = scanner.nextLine().strip();
+			HashSet<Song> arr = ms.findSongByTitle(inpString);
+			if (arr.size() == 0) {
+				System.out.printf("No songs in music store with title: %s\n", inpString);
+			} else {
+				for (Song song : arr) {
+					System.out.printf("Remove %s? (Enter Y for yes): ", song);
+					inpString = scanner.nextLine().strip();
+					if (inpString.equals("Y")) {
+						curUser.removeSong(song);
+					}
+				}
+			}
+		}
+		else {
+			System.out.print("\nEnter album title to remove: ");
+			inpString = scanner.nextLine().strip();
+			HashSet<Album> arr = ms.findAlbumByTitle(inpString);
+			if (arr.size() == 0) {
+				System.out.printf("No songs in music store with title: %s\n", inpString);
+			} else {
+				for (Album a : arr) {
+					System.out.printf("Remove %s? (Enter Y for yes): ", a);
+					inpString = scanner.nextLine().strip();
+					if (inpString.equals("Y")) {
+						curUser.removeAlbum(a);
+					}
+				}
 			}
 		}
 	}
@@ -524,8 +578,10 @@ public class UI {
 			System.out.print("Choose artist for song remove: ");
 			curUser.removeSongFromPlaylist(playlist, inpString, scanner.nextLine().strip());
 		} else if (inpString.equals("3")) {
-			curUser.shufflePlaylist(playlist);
-			System.out.printf("%s shuffled.\n", playlist);
+			if(curUser.shufflePlaylist(playlist))
+				System.out.printf("%s shuffled.\n", playlist);
+			else
+				System.out.printf("%s is read only.\n", playlist);
 		}else {
 			System.out.println("Invalid input.");
 		}

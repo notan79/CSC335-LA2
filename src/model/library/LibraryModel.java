@@ -143,6 +143,8 @@ public class LibraryModel extends StoreFront {
 			if(s.equals(song)) {
 				this.songList.remove(s);
 			}
+			for(Playlist p : this.allPlaylists)
+				p.removeSong(s);
 		}
 		this.genrePlaylist(song.getGenre());
 	}
@@ -152,6 +154,8 @@ public class LibraryModel extends StoreFront {
 			if(s.getAlbum().equals(album)) {
 				this.songList.remove(s);
 			}
+			for(Playlist p : this.allPlaylists)
+				p.removeSong(s);
 		}
 		this.genrePlaylist(album.getGenre());
 		this.allAlbums.remove(album);
@@ -205,10 +209,13 @@ public class LibraryModel extends StoreFront {
 		Collections.shuffle(this.songList);
 	}
 	
-	public void shufflePlaylist(String pname) {
+	public boolean shufflePlaylist(String pname) {
 		for(Playlist p : this.allPlaylists)
-			if(p.getName().equals(pname))
+			if(p.getName().equals(pname) && !p.isRemovable()) {
 				Collections.shuffle(this.songList);
+				return true;
+			}
+		return false;
 	}
 
 	// Setters
@@ -287,6 +294,11 @@ public class LibraryModel extends StoreFront {
 
 		for (int i = 0; i < songs.size(); i++) {
 			temp.add(songs.get(i).toString());
+		}
+		
+		// They are stored as a queue so want reverse order
+		if(playlistName.equals("Recently Played")) {
+			Collections.reverse(temp);
 		}
 
 		return temp;
