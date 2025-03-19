@@ -1,6 +1,6 @@
 package model;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.Year;
 
@@ -15,14 +15,14 @@ class PlaylistTest {
 	void testName() {
 		assertEquals(playlist.getName(), "P0");
 	}
-	
+
 	@Test
 	void testAdd1() {
 		playlist.addSong(s0);
 		assertEquals(playlist.getPlaylist().toString(), "[Title by Artist]");
 		assertEquals(playlist.toString(), "P0\n  -Title by Artist");
 	}
-	
+
 	@Test
 	void testAdd2() {
 		Song song = new Song("T2", a0);
@@ -31,7 +31,7 @@ class PlaylistTest {
 		assertEquals(playlist.getPlaylist().toString(), "[Title by Artist, T2 by Artist]");
 		assertEquals(playlist.toString(), "P0\n  -Title by Artist\n  -T2 by Artist");
 	}
-	
+
 	@Test
 	void testAddSame() {
 		playlist.addSong(s0);
@@ -39,7 +39,7 @@ class PlaylistTest {
 		assertEquals(playlist.getPlaylist().toString(), "[Title by Artist, Title by Artist]");
 		assertEquals(playlist.toString(), "P0\n  -Title by Artist\n  -Title by Artist");
 	}
-	
+
 	@Test
 	void testRemove() {
 		playlist.addSong(s0);
@@ -48,7 +48,7 @@ class PlaylistTest {
 		assertEquals(playlist.getPlaylist().toString(), "[]");
 		assertEquals(playlist.toString(), "P0");
 	}
-	
-	
+
+
 
 }

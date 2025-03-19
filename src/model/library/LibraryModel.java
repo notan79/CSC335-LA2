@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Stack;
 
 import model.Album;
 import model.Playlist;
@@ -13,15 +12,15 @@ import model.Song;
 
 /*
  * 	Authors:	Nathan Crutchfield and Cameron Liu
- * 
+ *
  * 	Purpose: 	Sub class of StoreFront to represent the user library to
  * 				store songs, create playlists, rate, etc.
- * 
- * 	Instance Variables: 
+ *
+ * 	Instance Variables:
  * 			- songList: 	protected ArrayList inherited from StoreFront
  * 			- allPlaylists: private ArrayList of Playlist objects
- * 
- * 	Methods: 
+ *
+ * 	Methods:
  * 			- public void setRating(Song, Rating)
  * 			- public void setFavorite(Song)
  * 			- public ArrayList<String> getPlaylists()
@@ -31,13 +30,13 @@ import model.Song;
  * 			- public boolean addSongToPlaylist(String, String, String)
  * 			- public boolean removeSongFromPlaylist(String, String, String)
  * 			- public ArrayList<String> getFavorites()
- * 	
+ *
  */
 public class LibraryModel extends StoreFront {
 
-	protected ArrayList<Playlist> allPlaylists = new ArrayList<Playlist>();
+	protected ArrayList<Playlist> allPlaylists = new ArrayList<>();
 	private HashSet<Album> allAlbums = new HashSet<>();
-	
+
 	public LibraryModel() {
 		super();
 		allPlaylists.add(new Playlist("Favorites", false));
@@ -45,7 +44,7 @@ public class LibraryModel extends StoreFront {
 		allPlaylists.add(new Playlist("Recently Played", false));
 		allPlaylists.add(new Playlist("Frequently Played", false));
 	}
-	
+
 	public boolean playSong(Song s) {
 		boolean flag = false;
 		for(Song temp : this.songList) {
@@ -58,60 +57,66 @@ public class LibraryModel extends StoreFront {
 		}
 		return flag;
 	}
-	
+
 	private void updateRecentPlays(Song s) {
 		Playlist p = null;
 		for(Playlist t : this.allPlaylists) {
-			if(t.getName().equals("Recently Played"))
+			if(t.getName().equals("Recently Played")) {
 				p = t;
+			}
 		}
-		
+
 		// Never happens
-		if(p == null)
+		if(p == null) {
 			return;
-		
+		}
+
 		ArrayList<Song> temp = p.getPlaylist();
 		// Remove the first song if the size limit is reached
-		if(temp.size() >= 10)
+		if(temp.size() >= 10) {
 			p.removeSong(temp.get(0));
+		}
 
 		// Always add the most recent song at the end
 		p.addSong(s);
 	}
-	
-	
+
+
 	private void updateFrequentPlays(Song s) {
 		Playlist p = null;
 		for(Playlist t : this.allPlaylists) {
-			if(t.getName().equals("Frequently Played"))
+			if(t.getName().equals("Frequently Played")) {
 				p = t;
+			}
 		}
-		
+
 		// Never can happen
-		if(p == null)
+		if(p == null) {
 			return;
-		
+		}
+
 		p.removeAll();
-		
+
 		HashMap<Song, Integer> counter = new HashMap<>();
 		for(Song t : this.songList) {
 			counter.put(t, t.getPlays());
 		}
-		
+
 		ArrayList<Integer> temp = new ArrayList<>(counter.values());
 		Collections.sort(temp, Collections.reverseOrder());
-		
+
 		int i = 0;
 		while(i < temp.size() && i <= 10) {
 			// Add the songs associated with the 10 most plays
 			for(Song key : counter.keySet()) {
-				if(counter.get(key) == temp.get(i) && temp.get(i) != 0)
+				if(counter.get(key) == temp.get(i) && temp.get(i) != 0) {
 					p.addSong(key);
+				}
 			}
 			++i;
 		}
 	}
-	
+
 	// Methods to alter the songs in the library.
 	@Override
 	public void addSong(Song song) {
@@ -120,34 +125,38 @@ public class LibraryModel extends StoreFront {
 
 		this.genrePlaylist(song.getGenre());
 	}
-	
+
 	public void addAlbum(Album album) {
-		if(!this.allAlbums.contains(album))
+		if(!this.allAlbums.contains(album)) {
 			this.allAlbums.add(album);
-		
+		}
+
 		for(Song s : album.getSongs()) {
-			if(!this.songList.contains(s))
+			if(!this.songList.contains(s)) {
 				this.addSong(s);
+			}
 		}
 	}
-	
+
 	public void removeSong(Song song) {
 		for(Song s : this.songList) {
-			if(s.equals(song))
+			if(s.equals(song)) {
 				this.songList.remove(s);
+			}
 		}
 		this.genrePlaylist(song.getGenre());
 	}
-	
+
 	public void removeAlbum(Album album) {
 		for(Song s : this.songList) {
-			if(s.getAlbum().equals(album))
+			if(s.getAlbum().equals(album)) {
 				this.songList.remove(s);
+			}
 		}
 		this.genrePlaylist(album.getGenre());
 		this.allAlbums.remove(album);
 	}
-	
+
 	// Creates, removes, or adds song to a genre playlist
 	private void genrePlaylist(String g) {
 		int count = countGenre(g);
@@ -158,19 +167,20 @@ public class LibraryModel extends StoreFront {
 				break;
 			}
 		}
-		
+
 		// Remove the playlist
-		if(genre != null)
+		if(genre != null) {
 			this.allPlaylists.remove(genre);
-		
+		}
+
 		// Need to update the playlist
 		if(count >= 10) {
 			// Currently no playlist (or user made playlist) of this genre, create and add
 			if(genre == null || genre.isRemovable()) {
-				genre = new Playlist(g, false);		
+				genre = new Playlist(g, false);
 				this.allPlaylists.add(genre);
 			}
-			
+
 			// Add all, non included songs of genre to the playlist
 			for(Song temp : this.songList) {
 				if(temp.getGenre().equals(g) && !genre.getPlaylist().contains(temp)) {
@@ -179,7 +189,7 @@ public class LibraryModel extends StoreFront {
 			}
 		}
 	}
-	
+
 	// Helper method, returns the amount of songs in the inputted genre
 	private int countGenre(String g){
 		int count = 0;
@@ -190,39 +200,48 @@ public class LibraryModel extends StoreFront {
 		}
 		return count;
 	}
-	
-	public void shuffle() {
+
+	public void shuffleLibrary() {
 		Collections.shuffle(this.songList);
+	}
+	
+	public void shufflePlaylist(String pname) {
+		for(Playlist p : this.allPlaylists)
+			if(p.getName().equals(pname))
+				Collections.shuffle(this.songList);
 	}
 
 	// Setters
 	public void setRating(Song song, Rating rate) {
 		for(Song s : this.songList) {
 			if(song.equals(s)){
-				if(rate == Rating.FIVE)
+				if(rate == Rating.FIVE) {
 					s.setFavorite();
-				
+				}
+
 				// Add rating of 4 or 5 to top rated playlist
 				if(rate == Rating.FIVE || rate == Rating.FOUR) {
 					for(Playlist p : this.allPlaylists) {
-						if(p.getName().equals("Top Rated")) 
+						if(p.getName().equals("Top Rated")) {
 							p.addSong(s);
+						}
 					}
 				}
 				s.setRating(rate);
 			}
 		}
 	}
-	
+
 	public void setFavorite(Song song) {
 		for(Song s : this.songList) {
 			if(s.equals(song)) {
 				s.setFavorite();
-				
+
 				// Add favorited songs to favorites playlist
 				for(Playlist p : this.allPlaylists) {
-					if(p.getName().equals("Favorites")) 
+					if(p.getName().equals("Favorites")) {
 						p.addSong(s);
+					}
 				}
 			}
 		}
@@ -231,18 +250,20 @@ public class LibraryModel extends StoreFront {
 	// Getters
 	public ArrayList<String> getPlaylists() {
 		ArrayList<String> temp = new ArrayList<>();
-		for(Playlist playlist : this.allPlaylists)
+		for(Playlist playlist : this.allPlaylists) {
 			temp.add(playlist.getName());
-		
+		}
+
 		Collections.sort(temp);
 		return temp;
 	}
-	
+
 	public ArrayList<String> getPlaylistsFormatted() {
 		ArrayList<String> temp = new ArrayList<>();
-		for(Playlist playlist : this.allPlaylists)
+		for(Playlist playlist : this.allPlaylists) {
 			temp.add(playlist.toString());
-		
+		}
+
 		Collections.sort(temp);
 		return temp;
 	}
@@ -251,31 +272,32 @@ public class LibraryModel extends StoreFront {
 		ArrayList<String> temp = new ArrayList<>();
 		Playlist tempPlaylist = null;
 		ArrayList<Song> songs;
-		
-		for (int i = 0; i < allPlaylists.size(); i++) {
-			if (allPlaylists.get(i).getName().equals(playlistName)) {
-				tempPlaylist = allPlaylists.get(i);
+
+		for (Playlist playlist : allPlaylists) {
+			if (playlist.getName().equals(playlistName)) {
+				tempPlaylist = playlist;
 			}
 		}
-		
+
 		if (tempPlaylist == null) {
-			return new ArrayList<String>();
+			return new ArrayList<>();
 		}
-	
+
 		songs = tempPlaylist.getPlaylist();
-		
+
 		for (int i = 0; i < songs.size(); i++) {
 			temp.add(songs.get(i).toString());
 		}
-	
+
 		return temp;
 	}
 
 	// Creates a new Playlist
 	public boolean createPlaylist(String playlistName) {
 		for(Playlist playlist : this.allPlaylists) {
-			if(playlist.getName().equals(playlistName))
+			if(playlist.getName().equals(playlistName)) {
 				return false;
+			}
 		}
 		Playlist temp = new Playlist(playlistName);
 		allPlaylists.add(temp);
@@ -287,52 +309,52 @@ public class LibraryModel extends StoreFront {
 		ArrayList<Song> songs = this.songList;
 		Playlist tempPlaylist = null;
 		boolean flag = false;
-		
+
 		// gets the proper playlist
-		for (int j = 0; j < allPlaylists.size(); j++) {
-			if (allPlaylists.get(j).getName().equals(playlistName)) {
-				tempPlaylist = allPlaylists.get(j);
+		for (Playlist playlist : allPlaylists) {
+			if (playlist.getName().equals(playlistName)) {
+				tempPlaylist = playlist;
 			}
 		}
 		if (tempPlaylist == null || !tempPlaylist.isRemovable()) {
 			return false;
 		}
-		
+
 		// adds the proper playlist
-		for (int i = 0; i < songs.size(); i++) {
-			if (songs.get(i).getTitle().equals(title) && songs.get(i).getArtist().equals(artist)) {
-				tempPlaylist.addSong(new Song(songs.get(i)));
+		for (Song song : songs) {
+			if (song.getTitle().equals(title) && song.getArtist().equals(artist)) {
+				tempPlaylist.addSong(new Song(song));
 				flag = true;
 			}
-		}	
+		}
 		return flag;
 	}
-	
+
 
 	// Removes a song from a specified playlist
 	public boolean removeSongFromPlaylist(String playlistName, String title, String artist) {
 		ArrayList<Song> songs = this.songList;
 		Playlist tempPlaylist = null;
-		
+
 		// gets the proper playlist
-		for (int j = 0; j < allPlaylists.size(); j++) {
-			if (allPlaylists.get(j).getName().equals(playlistName)) {
-				tempPlaylist = allPlaylists.get(j);
+		for (Playlist playlist : allPlaylists) {
+			if (playlist.getName().equals(playlistName)) {
+				tempPlaylist = playlist;
 			}
 		}
 		if (tempPlaylist == null || !tempPlaylist.isRemovable()) {
 			return false;
 		}
-		
+
 		// removes the song from the playlist
-		for (int i = 0; i < songs.size(); i++) {
-			if (songs.get(i).getTitle().equals(title) && songs.get(i).getArtist().equals(artist)) {
-				tempPlaylist.removeSong(new Song(songs.get(i)));
+		for (Song song : songs) {
+			if (song.getTitle().equals(title) && song.getArtist().equals(artist)) {
+				tempPlaylist.removeSong(new Song(song));
 			}
-		}	
+		}
 		return true;
 	}
-	
+
 
 	// Getter
 	public ArrayList<String> getFavorites() {
@@ -348,12 +370,12 @@ public class LibraryModel extends StoreFront {
 		Collections.sort(temp);
 		return temp;
 	}
-	
+
 	public ArrayList<String> getAlbumList(){
 		ArrayList<String> s = new ArrayList<>();
 		for(Album a : this.allAlbums) {
 			s.add(a.getAlbumName());
 		}
-		return s; 
+		return s;
 	}
 }

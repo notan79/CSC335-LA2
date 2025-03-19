@@ -1,14 +1,21 @@
 package view;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Scanner;
 
-import model.*;
-import model.library.*;
+import model.Album;
+import model.Compare;
+import model.Rating;
+import model.Song;
+import model.library.LibraryModel;
+import model.library.MusicStore;
+import model.library.StoreFront;
+import model.library.User;
 
 
 public class UI {
@@ -19,45 +26,45 @@ public class UI {
 	private static ArrayList<User> users = new ArrayList<>();
 
 	/*
-	 * 	Sets the user input scanner, creates music store and user library, 
+	 * 	Sets the user input scanner, creates music store and user library,
 	 * 	calls the main prompt to start.
 	 */
 	public static void run() {
 		try {
-			FileWriter fileWriter = new FileWriter(new File("data/user_data"), false);			
+			FileWriter fileWriter = new FileWriter(new File("data/user_data"), false);
 			fileWriter.close();
-			fileWriter = new FileWriter(new File("data/login"), false);			
+			fileWriter = new FileWriter(new File("data/login"), false);
 			fileWriter.close();
 		} catch (IOException e) {
 			// This can never happen, the file is already created
 			System.exit(1);
-		} 
-		
+		}
+
 		scanner = new Scanner(System.in);
 
 		ms = new MusicStore("albums/albums.txt");
-		
+
 		mainPrompt();
 	}
-	
+
 	private static void mainPrompt() {
 		System.out.print("Choose an action (1-3):\n" + "1. Login.\n" + "2. Create Account.\n"
 				+ "3. Exit.\n\n" + "Enter action: ");
-		
+
 		String inpString = runScannerOptions(3);
 
-		if (inpString.equals("1"))
+		if (inpString.equals("1")) {
 			login();
-		else if (inpString.equals("2"))
+		} else if (inpString.equals("2")) {
 			createUser();
-		else {
+		} else {
 			System.out.println("\nEnding program.");
 			scanner.close();
 			System.exit(0);
 		}
 		mainPrompt();
 	}
-	
+
 	private static void login() {
 		System.out.print("Enter username: ");
 		String userName = scanner.nextLine().strip();
@@ -70,14 +77,14 @@ public class UI {
 				if(u.getUsername().equals(userName)) {
 					curUser = u;
 					break;
-				}	
+				}
 			}
 			userPrompt();
 		}else {
 			System.out.println("Failed to login. Incorrect username or password.\n");
 		}
 	}
-	
+
 	private static void createUser() {
 		System.out.print("Enter a username: ");
 		String userName = scanner.nextLine().strip();
@@ -103,11 +110,11 @@ public class UI {
 
 		String inpString = runScannerOptions(3);
 
-		if (inpString.equals("1"))
+		if (inpString.equals("1")) {
 			searchPrompt(ms);
-		else if (inpString.equals("2"))
+		} else if (inpString.equals("2")) {
 			libraryPrompt();
-		else {
+		} else {
 			System.out.println("\nLogging out.\n");
 			return;
 		}
@@ -121,12 +128,14 @@ public class UI {
 
 		// Same search actions in both user library and music store.
 		String tempString = "user library";
-		if (s.getClass() == MusicStore.class)
+		if (s.getClass() == MusicStore.class) {
 			tempString = "music store";
+		}
 
 		System.out.printf("\nYou are searching in %s. Choose an action (1-5):\n" + "1. Search for song by title.\n"
 				+ "2. Search for song by artist.\n" + "3. Search for album by title.\n"
-				+ "4. Search for album by artist.\n" + "5. Exit search.\n\n" + "Enter action: ", tempString);
+				+ "4. Search for album by artist.\n" + "5. Search for song by genre.\n" + "6. Exit search.\n\n"
+				+ "Enter action: ", tempString);
 		String inpString = runScannerOptions(5);
 
 		// Find Song by Title
@@ -134,61 +143,106 @@ public class UI {
 			System.out.print("Enter song title: ");
 			inpString = scanner.nextLine().strip();
 			HashSet<Song> tempHashSet = s.findSongByTitle(inpString);
-			if (tempHashSet.size() > 0)
+			if (tempHashSet.size() > 0) {
 				System.out.printf("\nFound these songs with title: %s\n", inpString);
-			else
+			} else {
 				System.out.printf("\nFound no songs with title: %s\n", inpString);
+			}
 
-			for (Song song : tempHashSet)
+			for (Song song : tempHashSet) {
 				System.out.println("- " + song);
-		} 
+				
+				String str = "";
+				if(s.getClass() != MusicStore.class) {
+					System.out.print("Get album information (Y for yes): ");
+					str = scanner.nextLine().strip();
+				}
+
+				if(str.equals("Y")) {
+					// Happens when is a Library Object
+					LibraryModel m = (LibraryModel) s;
+					HashSet<Song> allSongs = s.getSongList();
+					Album a = song.getAlbum();
+					
+					boolean albumInLib = m.getAlbumList().contains(a.getAlbumName());
+					
+					System.out.printf("%s by %s. Genre: %s. Year: %s.\n", a.getAlbumName(), a.getArtist(), a.getGenre(), a.getYear());
+					if(albumInLib)
+						for(Song t : a.getSongs()) 
+							System.out.printf("  - %s (%s)\n", t, (allSongs.contains(t) ? "Added" : "Not Added"));
+					else 
+						System.out.println("No songs from this album are in the library.");
+				}
+			}
+		}
 		// Find song by artist
 		else if (inpString.equals("2")) {
 			System.out.print("Enter artist: ");
 			inpString = scanner.nextLine().strip();
 			HashSet<Song> tempHashSet = s.findSongByArtist(inpString);
-			if (tempHashSet.size() > 0)
+			if (tempHashSet.size() > 0) {
 				System.out.printf("\nFound these songs with artist: %s\n", inpString);
-			else
+			} else {
 				System.out.printf("\nFound no songs with artist: %s\n", inpString);
+			}
 
-			for (Song song : tempHashSet)
+			for (Song song : tempHashSet) {
 				System.out.println("- " + song);
-		} 
-		// Find songs by album 
+			}
+		}
+		// Find songs by album
 		else if (inpString.equals("3")) {
 			System.out.print("Enter album title: ");
 			inpString = scanner.nextLine().strip();
 			HashSet<Album> tempHashSet = s.findAlbumByTitle(inpString);
-			if (tempHashSet.size() > 0)
+			if (tempHashSet.size() > 0) {
 				System.out.printf("\nFound these albums with title: %s\n", inpString);
-			else
+			} else {
 				System.out.printf("\nFound no albums with title: %s\n", inpString);
+			}
 
-			for (Album album : tempHashSet)
+			for (Album album : tempHashSet) {
 				System.out.println("- " + album);
-		} 
+			}
+		}
 		// Find Albums by artist
 		else if (inpString.equals("4")) {
 			System.out.print("Enter artist: ");
 			inpString = scanner.nextLine().strip();
 			HashSet<Album> tempHashSet = s.findAlbumByArtist(inpString);
-			if (tempHashSet.size() > 0)
+			if (tempHashSet.size() > 0) {
 				System.out.printf("\nFound these albums with artist: %s\n", inpString);
-			else
+			} else {
 				System.out.printf("\nFound no albums with artist: %s\n", inpString);
+			}
 
-			for (Album album : tempHashSet)
+			for (Album album : tempHashSet) {
 				System.out.println("- " + album);
+			}
+		}
+		else if (inpString.equals("5")) {
+			System.out.print("Enter genre: ");
+			inpString = scanner.nextLine().strip();
+			HashSet<Song> tempHashSet = s.findSongByGenre(inpString);
+			if (tempHashSet.size() > 0) {
+				System.out.printf("\nFound these albums with artist: %s\n", inpString);
+			} else {
+				System.out.printf("\nFound no albums with artist: %s\n", inpString);
+			}
+
+			for (Song s0 : tempHashSet) {
+				System.out.println("- " + s0);
+			}
 		}
 
 		// Exit the music store
 		else {
 			System.out.printf("\nLeaving %s.\n\n", tempString);
-			if (s.getClass() == MusicStore.class)
+			if (s.getClass() == MusicStore.class) {
 				userPrompt();
-			else
+			} else {
 				libraryPrompt();
+			}
 			return;
 		}
 
@@ -203,8 +257,8 @@ public class UI {
 		System.out.printf("\nYou are in user library. Choose an action (1-8):\n" + "1. Search for songs or albums.\n"
 				+ "2. Add song or album to library.\n" + "3. Rate a song.\n" + "4. Favorite a song.\n"
 				+ "5. Get information for library.\n" + "6. Create playlist.\n"
-				+ "7. Add or remove song from playlist.\n" + "8. Exit User Library.\n\n" + "Enter action: ");
-		
+				+ "7. Add or remove song from playlist or shuffle playlist.\n" + "8. Exit User Library.\n\n" + "Enter action: ");
+
 		String inpString = runScannerOptions(8);
 		if (inpString.equals("1")) {
 			searchPrompt(curUser);
@@ -236,39 +290,59 @@ public class UI {
 	 */
 	private static void getLibraryInformation() {
 		String inpString;
+		String sorted;
 		System.out.printf("\nYou are in User library. Choose an action (1-5):\n" + "1. Show song titles.\n"
 				+ "2. Show artists.\n" + "3. Show albums.\n" + "4. Show playlists.\n" + "5. Show favorited songs.\n\n"
 				+ "Enter action: ");
 		inpString = runScannerOptions(5);
 		
+		System.out.printf("\nChoose an action (1-5):\n" + "1. Not sorted.\n"
+				+ "2. Sorted (a-z).\n" + "3. Sorted (z-a).\n\n");
+		sorted = runScannerOptions(3);
+		
 		// Get songs
 		if (inpString.equals("1")) {
 			HashSet<Song> hashSet = curUser.getSongList();
-			for (Song song : hashSet) {
+			System.out.printf("\nChoose an action (1-5):\n" + "1. Sorted by title.\n"
+					+ "2. Sorted by artist.\n" + "3. Sorted by rating." 
+					+ "4. Not sorted.\n\n");
+			
+			sorted = runScannerOptions(4);
+			ArrayList<Song> temp = new ArrayList<>(hashSet);
+			
+			if(sorted.equals("1"))
+				Collections.sort(temp, new Compare.CompareSongByTitle());
+			else if(sorted.equals("2"))
+				Collections.sort(temp, new Compare.CompareSongByArtist());
+			else if(sorted.equals("3"))
+				Collections.sort(temp, new Compare.CompareSongByRating());
+			
+			for (Song song : temp) {
 				System.out.println("- " + song);
 			}
-		} 
+			
+		}
 		// Get artists
 		else if (inpString.equals("2")) {
 			HashSet<String> hashSet = curUser.getArtists();
 			for (String s : hashSet) {
 				System.out.println("- " + s);
 			}
-		} 
+		}
 		// Get albums
 		else if (inpString.equals("3")) {
 			HashSet<String> hashSet = curUser.getAlbums();
 			for (String s : hashSet) {
 				System.out.println("- " + s);
 			}
-		} 
+		}
 		// Get playlists
 		else if (inpString.equals("4")) {
 			ArrayList<String> arrayList = curUser.getPlaylistsFormatted();
 			for (String s : arrayList) {
 				System.out.println("- " + s);
 			}
-		} 
+		}
 		// Get favorites
 		else {
 			ArrayList<String> arrayList = curUser.getFavorites();
@@ -286,7 +360,7 @@ public class UI {
 		System.out.printf("\nYou are adding from music store to user library. Choose an action (1-3):\n"
 				+ "1. Add song.\n" + "2. Add album.\n" + "3. Exit.\n\n" + "Enter action: ");
 		inpString = runScannerOptions(3);
-		
+
 		// Add song by title
 		if (inpString.equals("1")) {
 			System.out.print("\nEnter song title to add: ");
@@ -298,11 +372,12 @@ public class UI {
 				for (Song song : arr) {
 					System.out.printf("Add %s? (Enter Y for yes): ", song);
 					inpString = scanner.nextLine().strip();
-					if (inpString.equals("Y"))
+					if (inpString.equals("Y")) {
 						curUser.addSong(song);
+					}
 				}
 			}
-		} 
+		}
 		// Add all songs from album
 		else if (inpString.equals("2")) {
 			System.out.print("\nEnter album title to add: ");
@@ -316,8 +391,9 @@ public class UI {
 							album.getYear());
 					inpString = scanner.nextLine().strip();
 					if (inpString.equals("Y")) {
-						for (Song song : album.getSongs())
+						for (Song song : album.getSongs()) {
 							curUser.addSong(song);
+						}
 					}
 				}
 			}
@@ -334,28 +410,29 @@ public class UI {
 		System.out.print("\nEnter song title to rate: ");
 		inpString = scanner.nextLine().strip();
 		HashSet<Song> arr = curUser.findSongByTitle(inpString);
-		
+
 		// No songs in the library with given name
 		if (arr.size() == 0) {
 			System.out.printf("No songs in library with title: %s", inpString);
-		} 
+		}
 		// Prompt which song to rate (could be repeat names)
 		else {
 			for (Song song : arr) {
 				System.out.printf("Rate %s: ", song);
 				inpString = scanner.nextLine().strip();
-				if (inpString.equals("1"))
+				if (inpString.equals("1")) {
 					curUser.setRating(song, Rating.ONE);
-				else if (inpString.equals("2"))
+				} else if (inpString.equals("2")) {
 					curUser.setRating(song, Rating.TWO);
-				else if (inpString.equals("3"))
+				} else if (inpString.equals("3")) {
 					curUser.setRating(song, Rating.THREE);
-				else if (inpString.equals("4"))
+				} else if (inpString.equals("4")) {
 					curUser.setRating(song, Rating.FOUR);
-				else if (inpString.equals("5"))
+				} else if (inpString.equals("5")) {
 					curUser.setRating(song, Rating.FIVE);
-				else
+				} else {
 					curUser.setRating(song, Rating.NONE);
+				}
 			}
 		}
 	}
@@ -368,18 +445,19 @@ public class UI {
 		System.out.print("\nEnter song title to favorite: ");
 		inpString = scanner.nextLine().strip();
 		HashSet<Song> arr = curUser.findSongByTitle(inpString);
-		
+
 		// No song with given name
 		if (arr.size() == 0) {
 			System.out.printf("No songs in library with title: %s\n", inpString);
-		} 
+		}
 		// Prompt which song to favorite (could be repeat names)
 		else {
 			for (Song song : arr) {
 				System.out.printf("Favorite %s? (Enter Y for yes): ", song);
 				inpString = scanner.nextLine().strip();
-				if (inpString.equals("Y"))
+				if (inpString.equals("Y")) {
 					curUser.setFavorite(song);
+				}
 			}
 		}
 	}
@@ -392,11 +470,11 @@ public class UI {
 		System.out.print("Enter a name for your playlist: ");
 		inpString = scanner.nextLine().strip();
 		ArrayList<String> arr = curUser.getPlaylists();
-		
+
 		// No repeat playlists
-		if (arr.contains(inpString))
+		if (arr.contains(inpString)) {
 			System.out.printf("Already a playlist with name: %s\n", inpString);
-		else {
+		} else {
 			curUser.createPlaylist(inpString);
 			System.out.printf("Created new playlist: %s\n", inpString);
 		}
@@ -410,22 +488,24 @@ public class UI {
 
 		System.out.print("Choose playlist: ");
 		String playlist = scanner.nextLine().strip();
-		
+
 		// Make sure a playlist exists
 		boolean flag = false;
 		ArrayList<String> playlists = curUser.getPlaylists();
 		for(String p : playlists) {
-			if(playlist.equals(p)) flag = true;
+			if(playlist.equals(p)) {
+				flag = true;
+			}
 		}
 		if(!flag) {
 			System.out.printf("No playlist with name: %s.\n", playlist);
 			return;
 		}
-		
+
 		// Find to add or remove song
-		System.out.printf("\n" + "1. Add song.\n" + "2. Remove song.\n\n" + "Enter action: ");
+		System.out.printf("\n" + "1. Add song.\n" + "2. Remove song.\n 3. Shuffle playlist.\n\n" + "Enter action: ");
 		inpString = scanner.nextLine().strip();
-		
+
 		// Choose a song to add
 		if (inpString.equals("1")) {
 			System.out.print("Choose song title to add: ");
@@ -433,23 +513,28 @@ public class UI {
 			System.out.print("Choose artist for song: ");
 			if(!curUser.addSongToPlaylist(playlist, inpString, scanner.nextLine().strip())) {
 				System.out.printf("Unable to add %s to playlist: song not in library.\n", inpString);
-			}else
+			} else {
 				System.out.println("Song has been added.");
-		} 
+			}
+		}
 		// Choose a song to remove
 		else if (inpString.equals("2")) {
 			System.out.print("Choose song to remove: ");
 			inpString = scanner.nextLine().strip();
 			System.out.print("Choose artist for song remove: ");
 			curUser.removeSongFromPlaylist(playlist, inpString, scanner.nextLine().strip());
-		} else
+		} else if (inpString.equals("3")) {
+			curUser.shufflePlaylist(playlist);
+			System.out.printf("%s shuffled.\n", playlist);
+		}else {
 			System.out.println("Invalid input.");
+		}
 	}
 
 	/*
 	 * 	Helper method to guarantee a prompt (a number prompt for the different
 	 * 	options) is valid.
-	 * 
+	 *
 	 * 	int options: the amount of options to choose from
 	 */
 	private static boolean promptValidity(String s, int options) {
@@ -469,17 +554,18 @@ public class UI {
 
 	/*
 	 * 	Helper method to get inputs until a valid input is given (using promptValidity)
-	 * 
+	 *
 	 * 	int options: the amount of options to choose from
 	 */
 	private static String runScannerOptions(int options) {
 		String inpString = "";
 		while (scanner.hasNextLine()) {
 			inpString = scanner.nextLine().strip();
-			if (promptValidity(inpString, options))
+			if (promptValidity(inpString, options)) {
 				break;
-			else
+			} else {
 				System.out.printf("Invalid action: %s. Enter valid action: ", inpString);
+			}
 		}
 		return inpString;
 	}

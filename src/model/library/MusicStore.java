@@ -2,29 +2,28 @@ package model.library;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 import model.Album;
 import model.Song;
 
-import java.time.Year;
-
 /*
  * 	Author:		Cameron Liu
- * 
+ *
  * 	Purpose: 	Sub class of StoreFront to represent the store to pull
  * 				songs and albums from
- * 
- * 	Instance Variables: 
+ *
+ * 	Instance Variables:
  * 			- songList: protected ArrayList inherited from StoreFront
- * 
- * 	Methods: 
+ *
+ * 	Methods:
  * 			- private void parseFiles(String)
  * 			- private ArrayList<String> parseMainFile(String)
  * 			- private ArrayList<Album> parseAlbums(ArrayList<String>)
  * 			- public String getFileNameFormat(String, String)
- * 	
+ *
  */
 public class MusicStore extends StoreFront {
 
@@ -63,11 +62,11 @@ public class MusicStore extends StoreFront {
 
 	// For each album, add all the songs from its respective file.
 	private ArrayList<Album> parseAlbums(ArrayList<String> titles) throws FileNotFoundException {
-		ArrayList<Album> temp = new ArrayList<Album>();
+		ArrayList<Album> temp = new ArrayList<>();
 		ArrayList<Song> songs = new ArrayList<>();
 
 		for (int i = 0; i < titles.size(); i++) {
-			
+
 			// Read in the current album file
 			Scanner scanner = new Scanner(new File(titles.get(i)));
 			boolean flag = true;
@@ -75,7 +74,7 @@ public class MusicStore extends StoreFront {
 			// Read all songs from the file
 			while (scanner.hasNext()) {
 				String tempString = scanner.nextLine();
-				
+
 				// First line
 				if (flag) {
 					String[] line = tempString.split(",");
@@ -85,7 +84,7 @@ public class MusicStore extends StoreFront {
 					String year = line[3];
 					temp.add(new Album(albumName, artist, genre, Year.parse(year)));
 					flag = false;
-				} 
+				}
 				// Rest of lines
 				else {
 					Song s = new Song(tempString, temp.get(temp.size() - 1));
