@@ -212,8 +212,19 @@ class LibraryModelTest {
 			
 			assertEquals(s.getPlays(), 1);
 		}
-		
+	}
 	
+	@Test 
+	void testRemoveAlbum() { 
+		
+		
+		lm.addAlbum(a0);
+		lm.addAlbum(a1);
+		System.out.println("Albums: " + lm.getAlbums());
+		lm.removeAlbum(a0);
+		
+		
+		
 		
 		
 	}
