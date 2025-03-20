@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Year;
+import java.util.HashSet;
 
 import org.junit.jupiter.api.Test;
 
@@ -189,5 +190,37 @@ class LibraryModelTest {
 		System.out.println(lm.getPlaylistsFormatted());
 		assertEquals(lm.getPlaylistsFormatted().toString(), "[Favorites, Frequently Played, Playlist\n  -Title by Artist0\n  -Title2 by Artist0, Recently Played, Top Rated]");
 	}
+	
+	@Test
+	void testRemoveSongs() {
+		lm.addSong(s0);
+		lm.addSong(s1);	
+		lm.removeSong(s0);
+		assertEquals(lm.getSongList().toArray()[0], s1);
+	}
+	
+	@Test 
+	void testPlaySong() { 
+		lm.addSong(s0);
+		lm.playSong(s0);
 
+		HashSet<Song> hs = lm.findSongByTitle(s0.getTitle());
+		assertEquals(hs.size(), 1);
+		for (Song s : hs) {
+			System.out.println(s);
+			System.out.println(s.getPlays());
+			
+			assertEquals(s.getPlays(), 1);
+		}
+		
+	
+		
+		
+	}
+
+
+	
+	
+	
+	
 }

@@ -40,6 +40,7 @@ public final class Song {
 		this.title = title;
 		this.rating = Rating.NONE;
 		this.album = new Album(album);
+		
 	}
 
 	/*
@@ -50,7 +51,8 @@ public final class Song {
 		this.title = song.title;
 		this.rating = song.rating;
 		this.isFavorite = song.isFavorite;
-		this.album = new Album(song.album);
+		this.album = new Album(song.album);     
+		this.plays = song.getPlays(); 
 	}
 
 	/*

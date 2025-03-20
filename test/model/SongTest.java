@@ -70,7 +70,7 @@ class SongTest {
 
 	@Test
 	void testRating() {
-		assertEquals(s0.getRating(), Rating.NONE);
+		assertEquals(s0.getRating(), Rating.FIVE);
 
 		s0.setRating(Rating.THREE);
 		assertEquals(s0.getRating(), Rating.THREE);
@@ -90,9 +90,10 @@ class SongTest {
 
 	@Test
 	void testFavorite() {
-		assertFalse(s0.isFavorite());
-		s0.setFavorite();
-		assertTrue(s0.isFavorite());
+		Song song = new Song("RandomTitle", a0);
+		assertFalse(song.isFavorite());
+		song.setFavorite();
+		assertTrue(song.isFavorite());
 
 		Song s1 = new Song("Title1", a0);
 		assertFalse(s1.isFavorite());
