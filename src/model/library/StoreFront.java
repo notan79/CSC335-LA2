@@ -44,8 +44,8 @@ public class StoreFront {
 	}
 
 	// Returns a deep copy of songList
-	public HashSet<Song> getSongList() {
-		HashSet<Song> temp = new HashSet<>();
+	public ArrayList<Song> getSongList() {
+		ArrayList<Song> temp = new ArrayList<>();
 		for (Song song : this.songList) {
 			temp.add(new Song(song));
 		}

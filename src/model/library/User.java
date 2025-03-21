@@ -25,45 +25,6 @@ public class User extends LibraryModel {
 	private final String password;
 	private final static int saltLength = 64;
 
-	public static void main(String[] args) {
-		try {
-			FileWriter fileWriter = new FileWriter(new File("data/user_data"), false);
-			fileWriter.close();
-			fileWriter = new FileWriter(new File("data/login"), false);
-			fileWriter.close();
-		} catch (IOException e) {
-			// This can never happen, the file is already created
-			System.exit(1);
-		}
-
-		MusicStore ms = new MusicStore("albums/albums.txt");
-		User u = new User("user", "pass");
-
-		Album a = (Album) ms.findAlbumByTitle("21").toArray()[0];
-		u.addAlbum(a);
-		u.setFavorite(a.getSongs().get(0));
-		u.setRating(a.getSongs().get(1), Rating.FOUR);
-
-		u.playSong(a.getSongs().get(0));
-
-		u.saveData();
-		User u0 = u;
-
-		u = new User("user2", "pass2");
-		a = (Album) ms.findAlbumByTitle("19").toArray()[0];
-		u.addAlbum(a);
-		u.setFavorite(a.getSongs().get(0));
-		u.setFavorite(a.getSongs().get(1));
-
-		u.saveData();
-
-		User userTemp = loadAllData("data/user_data", ms).get(0);
-		System.out.println(u0);
-		System.out.println(userTemp);
-
-		System.out.println(u0.equals(userTemp));
-	}
-
 	public User(String username, String password) {
 		this.username = username;
 		this.password = salt(encrypt(password));
@@ -131,6 +92,7 @@ public class User extends LibraryModel {
 				String[] lines = scan.nextLine().split(" ");
 				// assumes that there is none of the same username
 				if (lines[0].equals(username)) {
+					scan.close();
 					return lines[1];
 				}
 			}

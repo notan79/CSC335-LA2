@@ -160,7 +160,7 @@ public class UI {
 				if(str.equals("Y")) {
 					// Happens when is a Library Object
 					LibraryModel m = (LibraryModel) s;
-					HashSet<Song> allSongs = s.getSongList();
+					ArrayList<Song> allSongs = s.getSongList();
 					Album a = song.getAlbum();
 					
 					boolean albumInLib = m.getAlbumList().contains(a.getAlbumName());
@@ -301,13 +301,12 @@ public class UI {
 		
 		// Get songs
 		if (inpString.equals("1")) {
-			HashSet<Song> hashSet = curUser.getSongList();
+			ArrayList<Song> temp = curUser.getSongList();
 			System.out.printf("\nChoose an action (1-5):\n" + "1. Sort by title.\n"
 					+ "2. Sort by artist.\n" + "3. Sort by rating." 
 					+ "4. Not sorted.\n\n");
 			
 			sorted = runScannerOptions(4);
-			ArrayList<Song> temp = new ArrayList<>(hashSet);
 			
 			if(sorted.equals("1"))
 				Collections.sort(temp, new Compare.CompareSongByTitle());
