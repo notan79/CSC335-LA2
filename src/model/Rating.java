@@ -15,11 +15,11 @@ public enum Rating {
 			case TWO:
 				return 2;
 			case THREE:
-				return 2;
+				return 3;
 			case FOUR:
-				return 2;
+				return 4;
 			case FIVE:
-				return 2;
+				return 5;
 			default:
 				return -1;
 		}

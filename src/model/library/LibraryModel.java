@@ -150,12 +150,16 @@ public class LibraryModel extends StoreFront {
 	}
 
 	public void removeAlbum(Album album) {
+		ArrayList<Song> remove = new ArrayList<>();
 		for(Song s : this.songList) {
 			if(s.getAlbum().equals(album)) {
-				this.songList.remove(s);
+				remove.add(s);
 			}
 			for(Playlist p : this.allPlaylists)
 				p.removeSong(s);
+		}
+		for(Song s : remove) {
+			this.songList.remove(s);
 		}
 		this.genrePlaylist(album.getGenre());
 		this.allAlbums.remove(album);
@@ -211,8 +215,8 @@ public class LibraryModel extends StoreFront {
 	
 	public boolean shufflePlaylist(String pname) {
 		for(Playlist p : this.allPlaylists)
-			if(p.getName().equals(pname) && !p.isRemovable()) {
-				Collections.shuffle(this.songList);
+			if(p.getName().equals(pname)) {
+				p.shuffle();;
 				return true;
 			}
 		return false;

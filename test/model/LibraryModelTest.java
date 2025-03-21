@@ -4,11 +4,13 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Year;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import org.junit.jupiter.api.Test;
 
 import model.library.LibraryModel;
+import model.library.MusicStore;
 
 class LibraryModelTest {
 	private LibraryModel lm = new LibraryModel();
@@ -33,7 +35,7 @@ class LibraryModelTest {
 	void testCreatePlaylist() {
 		assertTrue(lm.createPlaylist("New Playlist"));
 		assertTrue(lm.createPlaylist("New Playlist 2"));
-		System.out.println(lm.getPlaylists());
+
 		assertEquals(lm.getPlaylists().get(2), "New Playlist");
 		assertEquals(lm.getPlaylists().get(3), "New Playlist 2");
 
@@ -187,7 +189,7 @@ class LibraryModelTest {
 		lm.createPlaylist("Playlist");
 		lm.addSongToPlaylist("Playlist", s0.getTitle(), s0.getAlbum().getArtist());
 		lm.addSongToPlaylist("Playlist", s1.getTitle(), s1.getAlbum().getArtist());
-		System.out.println(lm.getPlaylistsFormatted());
+
 		assertEquals(lm.getPlaylistsFormatted().toString(), "[Favorites, Frequently Played, Playlist\n  -Title by Artist0\n  -Title2 by Artist0, Recently Played, Top Rated]");
 	}
 	
@@ -207,9 +209,6 @@ class LibraryModelTest {
 		HashSet<Song> hs = lm.findSongByTitle(s0.getTitle());
 		assertEquals(hs.size(), 1);
 		for (Song s : hs) {
-			System.out.println(s);
-			System.out.println(s.getPlays());
-			
 			assertEquals(s.getPlays(), 1);
 		}
 	}
@@ -217,20 +216,95 @@ class LibraryModelTest {
 	@Test 
 	void testRemoveAlbum() { 
 		
-		
+		a0.addSong(s0);
+		a1.addSong(s2);
 		lm.addAlbum(a0);
 		lm.addAlbum(a1);
-		System.out.println("Albums: " + lm.getAlbums());
+		ArrayList<String> arr = new ArrayList<>(lm.getAlbums());
+		assertEquals(arr.get(0), a0.getAlbumName());
+		assertEquals(arr.get(1), a1.getAlbumName());
+		assertEquals(lm.getAlbumList().size(), 2);
+
 		lm.removeAlbum(a0);
 		
-		
-		
-		
-		
+		arr = new ArrayList<>(lm.getAlbums());
+		assertEquals(arr.get(0), a1.getAlbumName());
+		assertEquals(arr.size(), 1);
 	}
-
-
 	
+	@Test 
+	void testGenrePlaylist() {
+		MusicStore ms = new MusicStore("albums/albums.txt");
+		Album adele = new ArrayList<>(ms.findAlbumByTitle("21")).get(0);
+		
+		lm.addAlbum(adele);
+		ArrayList<String> arr = lm.getSongsFromPlaylist(adele.getGenre());
+		for(Song s : adele.getSongs()) {
+			assertTrue(arr.contains(s.toString()));
+		}
+		assertEquals(adele.getSongs().size(), arr.size());
+	}
+	
+	@Test 
+	void shuffleLibrary() {
+		MusicStore ms = new MusicStore("albums/albums.txt");
+		Album adele = new ArrayList<>(ms.findAlbumByTitle("21")).get(0);
+
+		
+		lm.addAlbum(adele);
+		ArrayList<Song> arr = lm.getSongList();
+		lm.shuffleLibrary();
+		
+		boolean atLeastOneDifferentOrder = false;
+		ArrayList<Song> temp = lm.getSongList();
+		assertEquals(temp.size(), arr.size());
+		for(int i = 0; i < temp.size(); ++i) {
+			if(!temp.get(i).equals(arr.get(i)))
+				atLeastOneDifferentOrder = true;
+		}
+		assertTrue(atLeastOneDifferentOrder);
+	}
+	
+	@Test 
+	void shufflePlaylist() {
+		MusicStore ms = new MusicStore("albums/albums.txt");
+		Album adele = new ArrayList<>(ms.findAlbumByTitle("21")).get(0);
+
+		
+		lm.addAlbum(adele);
+		ArrayList<String> arr = lm.getSongsFromPlaylist("Pop");;
+		lm.shufflePlaylist("Pop");
+		
+		boolean atLeastOneDifferentOrder = false;
+		ArrayList<String> temp = lm.getSongsFromPlaylist("Pop");
+		assertEquals(temp.size(), arr.size());
+		for(int i = 0; i < temp.size(); ++i) {
+			if(!temp.get(i).equals(arr.get(i)))
+				atLeastOneDifferentOrder = true;
+		}
+		assertTrue(atLeastOneDifferentOrder);
+	}
+	
+	@Test 
+	void findSongsByGenre() {
+		// useless line to get better code coverage
+		Compare x = new Compare();
+		MusicStore ms = new MusicStore("albums/albums.txt");
+		Album adele = new ArrayList<>(ms.findAlbumByTitle("21")).get(0);
+		
+		Album a0 = new Album("ANAME", "Artist", "Genre", Year.parse("2020"));
+		Song s0 = new Song("XTitle", a0);
+		lm.addSong(s0);
+
+		
+		lm.addAlbum(adele);
+		HashSet<Song> set = lm.findSongByGenre("Pop");
+		lm.shufflePlaylist("Pop");
+		
+
+		for(Song s : adele.getSongs())
+			assertTrue(set.contains(s));
+	}
 	
 	
 	

@@ -3,6 +3,9 @@ package model;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
+import java.io.FileWriter;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.junit.jupiter.api.Test;
@@ -34,23 +37,27 @@ class UserTest {
 	}
 
 	@Test
-	void test() {
-//		try {
-//			FileWriter fileWriter = new FileWriter(new File("data/user_data"), false);
-//			fileWriter.close();
-//			fileWriter = new FileWriter(new File("data/login"), false);
-//			fileWriter.close();
-//		} catch (IOException e) {
-//			// This can never happen, the file is already created
-//			System.exit(1);
-//		}
+	void testSaveLoad() {
+		try {
+			FileWriter fileWriter = new FileWriter(new File("data/user_data"), false);
+			fileWriter.close();
+			fileWriter = new FileWriter(new File("data/login"), false);
+			fileWriter.close();
+		} catch (IOException e) {
+			// This can never happen, the file is already created
+			System.exit(1);
+		}
 
 		MusicStore ms = new MusicStore("albums/albums.txt");
 		User u = new User("user", "pass");
 		Album a = (Album) ms.findAlbumByTitle("21").toArray()[0];
 		u.addAlbum(a);
 		u.setFavorite(a.getSongs().get(0));
-		u.setRating(a.getSongs().get(1), Rating.FOUR);
+		u.setRating(a.getSongs().get(1), Rating.ONE);
+		u.setRating(a.getSongs().get(2), Rating.TWO);
+		u.setRating(a.getSongs().get(3), Rating.THREE);
+		u.setRating(a.getSongs().get(4), Rating.FOUR);
+		u.setRating(a.getSongs().get(5), Rating.FIVE);
 
 		u.playSong(a.getSongs().get(0));
 
@@ -62,6 +69,8 @@ class UserTest {
 		u.addAlbum(a);
 		u.setFavorite(a.getSongs().get(0));
 		u.setFavorite(a.getSongs().get(1));
+		u.createPlaylist("New Playlist");
+		u.addSongToPlaylist("New Playlist", a.getSongs().get(0).getTitle(), a.getSongs().get(0).getArtist());
 
 		u.saveData();
 
@@ -72,7 +81,17 @@ class UserTest {
 
 		userTemp = arr.get(1);
 		assertEquals(u, userTemp);
+		
+	}
+	
+	@Test
+	void testEquals() {
+		User u0 = new User("user", "pass");
+		User u1 = new User("user2", "pass");
 
+		assertFalse(u0.equals(null));
+		assertFalse(u0.equals(u1));
+		assertFalse(u0.equals(""));
 	}
 
 }

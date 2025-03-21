@@ -1,6 +1,10 @@
 package model;
 
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.time.Year;
 
@@ -47,6 +51,23 @@ class PlaylistTest {
 		playlist.removeSong(s0);
 		assertEquals(playlist.getPlaylist().toString(), "[]");
 		assertEquals(playlist.toString(), "P0");
+	}
+	
+	@Test
+	void testRemovable() {
+		playlist.addSong(s0);
+		assertTrue(playlist.isRemovable());
+
+		playlist.setRemovableFalse();
+
+		assertFalse(playlist.isRemovable());
+	}
+	
+	@Test
+	void testHashCode() {
+		assertEquals(playlist.hashCode(), new Playlist("P0").hashCode());
+		assertNotEquals(playlist.hashCode(), new Playlist("P1").hashCode());
+
 	}
 
 
