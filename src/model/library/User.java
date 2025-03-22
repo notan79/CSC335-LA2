@@ -80,7 +80,7 @@ public class User extends LibraryModel {
 	}
 
 	private static String encrypt(String password) {
-		// encrypts the 
+		// encrypts the password using SHA-256. 
 		String temp = "";
 		try {
 			MessageDigest md = MessageDigest.getInstance("SHA-256");
