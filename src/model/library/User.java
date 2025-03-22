@@ -17,6 +17,32 @@ import model.Playlist;
 import model.Rating;
 import model.Song;
 
+/* Authors(s): Cameron Liu and Nathan Crutchfield
+*
+* Purpose: An extension/subclass of the LibraryModel Class. We noticed that the User needed
+* similar functionality, so we extended the class and created new methods that applied to 
+* User only. It is a class to represent the functionality of creating playlists, favorting 
+* songs, and rating them. It has some security methods built into the class as well. 
+* Note that when a User object is created, the class automatically encrypts and salts the 
+* password, and puts it into the login file. 
+*
+* Instance Variables:
+* 	username: a final string that represents a user's username
+* 	password: a final string that represents a user's password
+* 	saltLength: a final int that represents how long the salt for the password is.
+*
+*
+* Methods:
+* 	public static boolean validateLogin(String, String): validates the user's login, checks if the user has same user and pass as the file. 
+* 	public static String usernameExist(String): checks if the username actually exists in the file, and if it does it returns the password that belongs to that user. 
+* 	public String getUsername(): returns username
+* 	public String getPassword(): returns password  
+* 	public void saveData(): writes all data to the file
+* 	public static ArrayList<User>loadAllData(String, MusicStore): loads all the user data from the specific file 
+* 	
+*
+*/
+
 
 
 public class User extends LibraryModel {
