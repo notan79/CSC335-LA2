@@ -80,6 +80,7 @@ public class User extends LibraryModel {
 	}
 
 	private static String encrypt(String password) {
+		// encrypts the 
 		String temp = "";
 		try {
 			MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -157,6 +158,7 @@ public class User extends LibraryModel {
 	}
 
 	private String getData() {
+		// formats data in one file to differentiate users info in the file.
 		StringBuilder sb = new StringBuilder("Start:"+ this.username);
 		sb.append("\nLibrary:");
 		sb.append(this.getRatings());
