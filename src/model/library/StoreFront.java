@@ -20,12 +20,13 @@ import model.Song;
  *
  * 	Methods:
  * 			- public void addSong(Song)
- * 			- public HashSet<Song> getSongList()
+ * 			- public ArrayList<Song> getSongList()
  * 			- public HashSet<String> getTitles()
  * 			- public HashSet<String> getArtists()
  * 			- public HashSet<String> getAlbums()
  * 			- public HashSet<Song> findSongByTitle(String)
  * 			- public HashSet<Song> findSongByArtist(String)
+ * 			- public HashSet<Song> findSongByGenre(String)
  * 			- public HashSet<Album> findAlbumByTitle(String)
  * 			- public HashSet<Album> findAlbumByArtist(String)
  * 			- private HashSet<Song> findSongsComparator(Song, Comparator<Song>)

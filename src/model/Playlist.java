@@ -11,11 +11,16 @@ import java.util.Collections;
  * Instance Variables:
  * 	name: the name of the playlist
  * 	playlistSongs: the ArrayList of songs that represents a playlist.
+ * 	removable: boolean representing if the playlist is read only
  *
  * Methods:
  * 	public void addSong(Song): adds a song to the ArrayList of songs (playlistSongs)
+ * 	public boolean isRemovable(): returns whether playlist is read only
+ * 	public void setRemovableFalse(): sets removable to false
  * 	public void removeSong(Song): removes a song from the ArrayList of songs (playlistSongs)
+ * 	public void removeAll(): removes all songs from the ArrayList
  * 	public String getName(): returns the name of the ArrayList of songs (playlistSongs)
+ * 	public void shuffle(): shuffles the playlist
  * 	public ArrayList<Song> getPlaylist(): returns the ArrayList of songs (playlistSongs)
  *
  */

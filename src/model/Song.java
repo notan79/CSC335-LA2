@@ -10,6 +10,7 @@ package model;
  * 	rating: rating of the Song
  * 	album: album that the Song is from
  * 	isFavorite: if the Song is a favorite
+ * 	plays: how many times the song has been played
  *
  * Methods:
  *
@@ -17,10 +18,14 @@ package model;
  * public static Song fromAlbum(Album): returns a song from the album
  * public String getTitle(): gets the title
  * public String getArtist(): gets the artist
+ * public String getGenre(): gets the genre
  * public Rating getRating(): gets the rating
+ * public Album getAlbum(): gets the album
  * public boolean isFavorite(): checks if the song is favorite
+ * public int getPlays(): gets the amount of plays
  * public void setFavorite(): sets the current song to favorite
  * public void setRating(Rating): sets the rating to the rating from the constructor, which is an ENUM.
+ * public void play(): play the song
  *
  */
 

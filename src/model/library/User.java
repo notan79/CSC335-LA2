@@ -28,8 +28,8 @@ import model.Song;
 *
 * Instance Variables:
 * 	username: a final string that represents a user's username
-* 	password: a final string that represents a user's password
-* 	saltLength: a final int that represents how long the salt for the password is.
+* 	password: a final string that represents a user's encrypted and salted password
+* 	saltLength: a static final int that represents how long the salt for the password is.
 *
 *
 * Methods:
@@ -46,7 +46,7 @@ import model.Song;
 
 
 public class User extends LibraryModel {
-	// Some comment
+
 	private final String username;
 	private final String password;
 	private final static int saltLength = 64;
@@ -68,7 +68,7 @@ public class User extends LibraryModel {
 		}
 	}
 
-	// 0 to 93, add the int value of 'a' 64 times
+	// Add saltLength additional random chars to the password
 	private static String salt(String password) {
 		Random random = new Random();
 		StringBuilder sb = new StringBuilder(password);
@@ -79,8 +79,8 @@ public class User extends LibraryModel {
 		return sb.toString();
 	}
 
+	// Encrypts the password using SHA-256. 
 	private static String encrypt(String password) {
-		// encrypts the password using SHA-256. 
 		String temp = "";
 		try {
 			MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -98,9 +98,8 @@ public class User extends LibraryModel {
 		return temp;
 	}
 
-
+	// Checks if the user has the same user and pass
 	public static boolean validateLogin(String username, String password) {
-		// checks if the user has the same user and pass
 		String temp = usernameExist(username);
 		if (temp == null) {
 			return false;
@@ -110,8 +109,8 @@ public class User extends LibraryModel {
 		return temp != null && temp.equals(encrypt(password));
 	}
 
+	// Returns the encrypted and salted password associated with username
 	public static String usernameExist(String username) {
-		// returns the encrypted and salted pass associated with user
 		File file = new File("data/login");
 		try {
 			Scanner scan = new Scanner(file);
@@ -157,8 +156,8 @@ public class User extends LibraryModel {
 
 	}
 
+	// Formats data in one string to differentiate users info in the file.
 	private String getData() {
-		// formats data in one file to differentiate users info in the file.
 		StringBuilder sb = new StringBuilder("Start:"+ this.username);
 		sb.append("\nLibrary:");
 		sb.append(this.getRatings());
@@ -167,6 +166,7 @@ public class User extends LibraryModel {
 		return sb.toString();
 	}
 
+	// Formats the ratings for songs
 	private String getRatings() {
 		StringBuilder sb = new StringBuilder("[");
 		for(Song s : this.songList) {
@@ -182,6 +182,7 @@ public class User extends LibraryModel {
 		return sb.toString();
 	}
 
+	// Formats the playlist information
 	private String getPlaylistInfo() {
 		StringBuilder sb = new StringBuilder();
 		ArrayList<String> arr = this.getPlaylists();
@@ -196,7 +197,7 @@ public class User extends LibraryModel {
 		return sb.toString();
 	}
 
-	// Loads in all the user data from the specified file
+	// Loads in all the user data from the specified file, and returns as a List of users
 	public static ArrayList<User>loadAllData(String file, MusicStore ms) {
 
 		// Read in the file
@@ -214,6 +215,8 @@ public class User extends LibraryModel {
 		}
 
 		ArrayList<User> users = new ArrayList<>();
+		
+		// Get all the file lines into one string
 		StringBuilder sb = new StringBuilder();
 		while(scan.hasNextLine()) {
 			sb.append(scan.nextLine());
@@ -236,7 +239,7 @@ public class User extends LibraryModel {
 				int playlistsIndex = user.indexOf("Playlists:");
 				userNameIndex = user.indexOf(":");
 
-				// Add all the songs to the library
+				// Add all the songs to the library, with the correct rating, favorite, plays, etc
 				String[] songsInLibrary = user.substring(userNameIndex+2, playlistsIndex-1).split(",");
 				for(String s: songsInLibrary) {
 					String[] temp = s.split("by");

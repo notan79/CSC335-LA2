@@ -8,6 +8,7 @@ package model;
 public enum Rating {
 	ONE, TWO, THREE, FOUR, FIVE, NONE;
 
+	// Get a numeric representation of the rating for the comparator
 	public int valueOf() {
 		switch(this) {
 			case ONE:
