@@ -19,8 +19,20 @@ import model.Song;
  * 	Instance Variables:
  * 			- songList: 	protected ArrayList inherited from StoreFront
  * 			- allPlaylists: private ArrayList of Playlist objects
+ * 			- allAlbums: HashSet of all the added albums
  *
  * 	Methods:
+ * 			- public boolean playSong(Song)
+ * 			- private void updateRecentPlays(Song)
+ * 			- private void updateFrequentPlays(Song)
+ * 			- public void addSong(Song)
+ * 			- public void addAlbum(Album)
+ * 			- public void removeSong(Song)
+ * 			- public void removeAlbum(Album)
+ * 			- private void genrePlaylist(String)
+ * 			- private int countGenre(String)
+ * 			- public void shuffleLibrary()
+ * 			- public void shufflePlaylist(String)
  * 			- public void setRating(Song, Rating)
  * 			- public void setFavorite(Song)
  * 			- public ArrayList<String> getPlaylists()
@@ -30,6 +42,7 @@ import model.Song;
  * 			- public boolean addSongToPlaylist(String, String, String)
  * 			- public boolean removeSongFromPlaylist(String, String, String)
  * 			- public ArrayList<String> getFavorites()
+ * 			- public ArrayList<String> getAlbumList()
  *
  */
 public class LibraryModel extends StoreFront {
