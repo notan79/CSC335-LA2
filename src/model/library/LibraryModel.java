@@ -114,16 +114,20 @@ public class LibraryModel extends StoreFront {
 		for(Song t : this.songList) {
 			counter.put(t, t.getPlays());
 		}
+		
 
 		ArrayList<Integer> temp = new ArrayList<>(counter.values());
 		Collections.sort(temp, Collections.reverseOrder());
 
 		int i = 0;
+		
+		HashSet<Song> seen = new HashSet<Song>();
 		while(i < temp.size() && i <= 10) {
 			// Add the songs associated with the 10 most plays
 			for(Song key : counter.keySet()) {
-				if(counter.get(key) == temp.get(i) && temp.get(i) != 0) {
+				if(counter.get(key) == temp.get(i) && temp.get(i) != 0 && !seen.contains(key)) {
 					p.addSong(key);
+					seen.add(key);
 				}
 			}
 			++i;
@@ -152,12 +156,16 @@ public class LibraryModel extends StoreFront {
 	}
 
 	public void removeSong(Song song) {
+		ArrayList<Song> remove = new ArrayList<>();
 		for(Song s : this.songList) {
 			if(s.equals(song)) {
-				this.songList.remove(s);
+				remove.add(s);
 			}
 			for(Playlist p : this.allPlaylists)
 				p.removeSong(s);
+		}
+		for(Song s : remove) {
+			this.songList.remove(s);
 		}
 		this.genrePlaylist(song.getGenre());
 	}
@@ -189,11 +197,6 @@ public class LibraryModel extends StoreFront {
 			}
 		}
 
-		// Remove the playlist
-		if(genre != null) {
-			this.allPlaylists.remove(genre);
-		}
-
 		// Need to update the playlist
 		if(count >= 10) {
 			// Currently no playlist (or user made playlist) of this genre, create and add
@@ -208,6 +211,9 @@ public class LibraryModel extends StoreFront {
 					genre.addSong(temp);
 				}
 			}
+		}else if(genre != null) {
+			// remove it if it existed but is no longer greater than 10
+			this.allPlaylists.remove(genre);
 		}
 	}
 

@@ -33,6 +33,9 @@ import model.Song;
 *
 *
 * Methods:
+* 	public void saveLogin(): save the login information for user
+* 	public static String salt(String): salt onto a password
+* 	public static String encrypt(String): encrypt a password
 * 	public static boolean validateLogin(String, String): validates the user's login, checks if the user has same user and pass as the file. 
 * 	public static String usernameExist(String): checks if the username actually exists in the file, and if it does it returns the password that belongs to that user. 
 * 	public String getUsername(): returns username
@@ -54,10 +57,9 @@ public class User extends LibraryModel {
 	public User(String username, String password) {
 		this.username = username;
 		this.password = salt(encrypt(password));
-		writeFile();
 	}
 
-	private void writeFile() {
+	public void saveLogin() {
 		try {
 			FileWriter fileWriter = new FileWriter(new File("data/login"), true);
 			fileWriter.write(username + " " + password + "\n");
@@ -240,7 +242,11 @@ public class User extends LibraryModel {
 				userNameIndex = user.indexOf(":");
 
 				// Add all the songs to the library, with the correct rating, favorite, plays, etc
-				String[] songsInLibrary = user.substring(userNameIndex+2, playlistsIndex-1).split(",");
+				String[] songsInLibrary = {};
+				
+				// See if songs exist
+				if(userNameIndex+2 < playlistsIndex-1)
+					songsInLibrary = user.substring(userNameIndex+2, playlistsIndex-1).split(",");
 				for(String s: songsInLibrary) {
 					String[] temp = s.split("by");
 					String songName = temp[0].strip();
