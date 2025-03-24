@@ -61,12 +61,18 @@ public class Playlist {
 
 	public void removeSong(Song song) {
 		// removes a song from the playlist
+		ArrayList<Song> remove = new ArrayList<>();
 		for (int i = 0; i < playlistSongs.size(); i++) {
 			if (playlistSongs.get(i).equals(song)) {
 				// if song in the constructor has the same title and artist, remove it
-				playlistSongs.remove(i);
+				remove.add(playlistSongs.get(i));
 			}
 		}
+		
+		for(Song s : remove) {
+			playlistSongs.remove(s);
+		}
+		
 	}
 
 	public void removeAll() {
@@ -100,7 +106,11 @@ public class Playlist {
 	public String toString() {
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append(this.name);
-		for(Song song : this.playlistSongs) {
+		ArrayList<Song> temp = new ArrayList<Song>(this.playlistSongs);
+		if(this.name.equals("Recently Played")) {
+			Collections.reverse(temp);
+		}
+		for(Song song : temp) {
 			stringBuilder.append("\n  -");
 			stringBuilder.append(song);
 			// stringBuilder.append("\n");
