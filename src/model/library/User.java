@@ -29,7 +29,7 @@ import model.Song;
 * Instance Variables:
 * 	username: a final string that represents a user's username
 * 	password: a final string that represents a user's encrypted and salted password
-* 	saltLength: a static final int that represents how long the salt for the password is.
+* 	salt: a final string that has the salt prior to encryption
 *
 *
 * Methods:
@@ -52,11 +52,11 @@ public class User extends LibraryModel {
 
 	private final String username;
 	private final String password;
-	private final static int saltLength = 64;
+	private final static String salt = "</NmMu:iA8WI+>SK1Zd3:y`dh@B<3V:`";
 
 	public User(String username, String password) {
 		this.username = username;
-		this.password = salt(encrypt(password));
+		this.password = encrypt(salt(password));
 	}
 
 	public void saveLogin() {
@@ -72,12 +72,8 @@ public class User extends LibraryModel {
 
 	// Add saltLength additional random chars to the password
 	private static String salt(String password) {
-		Random random = new Random();
 		StringBuilder sb = new StringBuilder(password);
-		for (int i = 0; i < User.saltLength; i++) {
-			char randChar = (char)('!' + random.nextInt(93));
-			sb.append(String.valueOf(randChar));
-		}
+		sb.append(User.salt);
 		return sb.toString();
 	}
 
@@ -103,12 +99,7 @@ public class User extends LibraryModel {
 	// Checks if the user has the same user and pass
 	public static boolean validateLogin(String username, String password) {
 		String temp = usernameExist(username);
-		if (temp == null) {
-			return false;
-		} else {
-			temp = temp.substring(0, temp.length() - User.saltLength);
-		}
-		return temp != null && temp.equals(encrypt(password));
+		return temp != null && temp.equals(encrypt(salt(password)));
 	}
 
 	// Returns the encrypted and salted password associated with username
