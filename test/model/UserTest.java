@@ -2,6 +2,7 @@ package model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.io.FileWriter;
 import java.io.File;
@@ -20,20 +21,30 @@ class UserTest {
 
 	@Test
 	void testValidateLogin() {
+		user.saveLogin();
 		assertEquals(User.validateLogin("username", "password"), true);
 		assertEquals(User.validateLogin("user2", "thisisnotmypassword"), false);
 	}
 
 	@Test
 	void testGetUsername() {
+		user.saveLogin();
+
 		assertEquals(user.getUsername(), "username");
 		assertFalse(user2.getUsername().equals("username2"));
 	}
 
 	@Test
 	void testGetPassword() {
-		assertEquals(user.getPassword().substring(0, user.getPassword().length() - 64), "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8");
-		assertFalse(user2.getPassword().substring(0, user2.getPassword().length() - 64).equals("definitely not the right password"));
+		user.saveLogin();
+		user2.saveLogin();
+
+		assertEquals(user.getPassword(), "c241b395f7af32d4975528768cae4ccd89f14e1e478f0fc6cc98aed2ced485c6");
+		assertEquals(user2.getPassword(), "55135f0642603612043ef4906aeb094633fe18fa5a725c60fcc0b66554309664");
+	
+		assertNotEquals(user.getPassword(), "55135f0642603612043ef4906aeb094633fe18fa5a725c60fcc0b66554309664");
+		assertNotEquals(user2.getPassword(), "c241b395f7af32d4975528768cae4ccd89f14e1e478f0fc6cc98aed2ced485c6");
+
 	}
 
 	@Test
