@@ -239,14 +239,22 @@ public class User extends LibraryModel {
 				if(userNameIndex+2 < playlistsIndex-1)
 					songsInLibrary = user.substring(userNameIndex+2, playlistsIndex-1).split(",");
 				for(String s: songsInLibrary) {
-					String[] temp = s.split("by");
+					String[] temp = s.split(" by");
 					String songName = temp[0].strip();
 
 					temp = temp[1].strip().split(" ");
-
+					
+					
 					String artistName = temp[0].strip();
-					String strRating = temp[1].strip();
-					int plays = Integer.parseInt(temp[2].strip());
+					
+					int i = 1; 
+					while(temp.length - i > 2) {
+						artistName += " " + temp[i].strip();
+						++i;
+					}
+					
+					String strRating = temp[i].strip();
+					int plays = Integer.parseInt(temp[i+1].strip());
 					Rating rating;
 					switch(strRating) {
 						case "ONE":
@@ -268,6 +276,7 @@ public class User extends LibraryModel {
 							rating = Rating.NONE;
 							break;
 					}
+					
 
 					HashSet<Song> possSongs = ms.findSongByTitle(songName);
 					for(Song song : possSongs) {
@@ -275,7 +284,7 @@ public class User extends LibraryModel {
 							tempUser.addSong(song);
 							tempUser.setRating(song, rating);
 							// Play the song
-							for(int i = 0; i < plays; ++i) {
+							for(i = 0; i < plays; ++i) {
 								tempUser.playSong(song);
 							}
 						}

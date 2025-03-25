@@ -70,8 +70,13 @@ public class Playlist {
 		}
 		
 		for(Song s : remove) {
-			playlistSongs.remove(s);
+			if(!this.name.equals("Recently Played"))
+				playlistSongs.remove(s);
 		}
+		
+		// Only remove once
+		if(remove.size() > 0 && this.name.equals("Recently Played"))
+			playlistSongs.remove(remove.get(0));
 		
 	}
 

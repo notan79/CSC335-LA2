@@ -270,7 +270,15 @@ public class UI {
 		ArrayList<Song> allSongs = m.getSongList();
 		
 		boolean albumInLib = m.getAlbumList().contains(a.getAlbumName());
+		HashSet<Album> temp = ms.findAlbumByTitle(a.getAlbumName()); 
 		
+		// Needs to be populated with the songs
+		for(Album t : temp) {
+			if(t.equals(a))
+				a = t;
+		}
+		
+//		System.out.println(a.getSongs());
 		System.out.printf("%s by %s. Genre: %s. Year: %s.\n", a.getAlbumName(), a.getArtist(), a.getGenre(), a.getYear());
 		if(albumInLib) {
 			for(Song t : a.getSongs()) 
