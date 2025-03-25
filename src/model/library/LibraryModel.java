@@ -65,7 +65,7 @@ public class LibraryModel extends StoreFront {
 				temp.play();
 				flag = true;
 				this.updateRecentPlays(s);
-				this.updateFrequentPlays(s);
+				this.updateFrequentPlays();
 			}
 		}
 		return flag;
@@ -85,6 +85,11 @@ public class LibraryModel extends StoreFront {
 		}
 
 		ArrayList<Song> temp = p.getPlaylist();
+		for(Song t : temp) {
+			if(!this.songList.contains(t)) {
+				temp.remove(t);
+			}
+		}
 		// Remove the first song if the size limit is reached
 		if(temp.size() >= 10) {
 			p.removeSong(temp.get(0));
@@ -95,7 +100,7 @@ public class LibraryModel extends StoreFront {
 	}
 
 
-	private void updateFrequentPlays(Song s) {
+	private void updateFrequentPlays() {
 		Playlist p = null;
 		for(Playlist t : this.allPlaylists) {
 			if(t.getName().equals("Frequently Played")) {
@@ -122,10 +127,10 @@ public class LibraryModel extends StoreFront {
 		int i = 0;
 		
 		HashSet<Song> seen = new HashSet<Song>();
-		while(i < temp.size() && i <= 10) {
+		while(i < temp.size() && seen.size() < 10) {
 			// Add the songs associated with the 10 most plays
 			for(Song key : counter.keySet()) {
-				if(counter.get(key) == temp.get(i) && temp.get(i) != 0 && !seen.contains(key)) {
+				if(counter.get(key) == temp.get(i) && temp.get(i) != 0 && !seen.contains(key) && seen.size() < 10) {
 					p.addSong(key);
 					seen.add(key);
 				}
@@ -160,9 +165,9 @@ public class LibraryModel extends StoreFront {
 		for(Song s : this.songList) {
 			if(s.equals(song)) {
 				remove.add(s);
+				for(Playlist p : this.allPlaylists)
+					p.removeSong(s);
 			}
-			for(Playlist p : this.allPlaylists)
-				p.removeSong(s);
 		}
 		for(Song s : remove) {
 			this.songList.remove(s);
@@ -175,9 +180,9 @@ public class LibraryModel extends StoreFront {
 		for(Song s : this.songList) {
 			if(s.getAlbum().equals(album)) {
 				remove.add(s);
+				for(Playlist p : this.allPlaylists)
+					p.removeSong(s);
 			}
-			for(Playlist p : this.allPlaylists)
-				p.removeSong(s);
 		}
 		for(Song s : remove) {
 			this.songList.remove(s);
@@ -246,7 +251,7 @@ public class LibraryModel extends StoreFront {
 		for(Song s : this.songList) {
 			if(song.equals(s)){
 				if(rate == Rating.FIVE) {
-					s.setFavorite();
+					this.setFavorite(song);
 				}
 
 				// Add rating of 4 or 5 to top rated playlist
@@ -266,7 +271,6 @@ public class LibraryModel extends StoreFront {
 		for(Song s : this.songList) {
 			if(s.equals(song)) {
 				s.setFavorite();
-
 				// Add favorited songs to favorites playlist
 				for(Playlist p : this.allPlaylists) {
 					if(p.getName().equals("Favorites")) {
